@@ -96,7 +96,7 @@ COLOR_RED='\033[1;31m'
     echo "Installing packages that haven't been installed yet"
     sudo pacman --noconfirm -S "${packagesToInstall[@]}";
 
-     if [ "$needed" = true ] ; then
+     if [ "${needed}" = true ] ; then
        sudo pacman --noconfirm --needed -S "${packagesToInstall[@]}";
      else
        sudo pacman --noconfirm -S "${packagesToInstall[@]}";
