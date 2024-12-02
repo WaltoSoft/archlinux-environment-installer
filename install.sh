@@ -2,7 +2,9 @@
 # Declare variables
 #--------------------------------------------------
 PACMAN_INITIAL_PACKAGES=(
-  gum
+  gum,
+  git
+  base-devel
 )
 
 PACMAN_INSTALL_PACKAGES=(
@@ -13,6 +15,7 @@ PACMAN_INSTALL_PACKAGES=(
 )
 
 YAY_INSTALL_PACKAGES=(
+  "uwsm"
 )
 
 COLOR_GREEN='\033[0;32m'
@@ -26,7 +29,7 @@ COLOR_RED='\033[1;31m'
     sudo pacman -Sy
 
     ensureFolder "${HOME}/Git" true
-    installPackages "${PACMAN_INITIAL_PACKAGES[@]}"
+    installPackages "${PACMAN_INITIAL_PACKAGES[@]}" true
     confirmStart
     installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
     installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
@@ -74,6 +77,7 @@ COLOR_RED='\033[1;31m'
 
   installPackages() {
     packagesToInstall=();
+    needed = $1
 
     for package; do
       if [[ $(isPackageInstalled "${package}") == 0 ]]; then
@@ -91,7 +95,14 @@ COLOR_RED='\033[1;31m'
 
     echo "Installing packages that haven't been installed yet"
     sudo pacman --noconfirm -S "${packagesToInstall[@]}";
-    echo "pacman package installation complete."
+
+     if [ "$needed" = true ] ; then
+       sudo pacman --noconfirm --needed -S "${packagesToInstall[@]}";
+     else
+       sudo pacman --noconfirm -S "${packagesToInstall[@]}";
+     fi
+     
+     echo "pacman package installation complete."
   }
 
   installYay() {
