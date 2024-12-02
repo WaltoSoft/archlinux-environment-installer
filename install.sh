@@ -6,6 +6,9 @@ PACMAN_INITIAL_PACKAGES=(
 )
 
 PACMAN_INSTALL_PACKAGES=(
+  "kitty"
+  "nautilus"
+  "wofi"
   "hyprland"  
 )
 
