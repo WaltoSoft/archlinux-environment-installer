@@ -121,7 +121,7 @@ COLOR_RED='\033[1;31m'
       echo "Cloning the yay git repository at https://aur.archlinux.org/yay-git"
       git clone https://aur.archlinux.org/yay-git.git
 
-      ensureFolder "${HOME/Git/yay-git" true
+      ensureFolder "${HOME}/Git/yay-git" true
 
       echo "Compiling yay source code and installing as a package"
       makepkg -si
