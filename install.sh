@@ -107,7 +107,7 @@ COLOR_RED='\033[1;31m'
     else
       echo "Building and Installing yay from source code"
 
-      ensureFolder "${HOME}/Git"
+      ensureFolder ${HOME}/Git
 
       if [ -d ~/Git/yay-git ] ;then
         rm -rf ~/Git/yay-git
@@ -137,7 +137,7 @@ COLOR_RED='\033[1;31m'
 
     for package; do
       if [[ $(isPackageInstalled "${package}") == 0 ]]; then
-        echo "Package '${package}' is already installed."
+        echo "Package ''${package}'' is already installed."
         continue
       fi;
         
