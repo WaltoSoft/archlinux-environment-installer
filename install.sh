@@ -109,8 +109,8 @@ COLOR_RED='\033[1;31m'
 
       ensureFolder ${HOME}/Git
 
-      if [ -d ~/Git/yay-git ] ;then
-        rm -rf ~/Git/yay-git
+      if [ -d ${HOME}/Git/yay-git ] ;then
+        rm -rf ${HOME}/Git/yay-git
         echo "Existing yay-git repo removed"
       fi
 
