@@ -65,7 +65,7 @@ COLOR_RED='\033[1;31m'
     folderPath=$1
     enterPath=$2
 
-    echo $folderPath
+    echo "Ensuring folder ${folderPath} exists"
     
     if [ -d path ] ;then
       mkdir $folderPath
@@ -74,7 +74,7 @@ COLOR_RED='\033[1;31m'
     if [ "${enterPath}" = true ] ; then
       echo "Changing dir to ${folderPath}"
       cd $folderPath
-      pwd
+      echo "Current path: ${pwd}"
     fi
   }
 
