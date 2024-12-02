@@ -2,9 +2,9 @@
 # Declare variables
 #--------------------------------------------------
 PACMAN_INITIAL_PACKAGES=(
-  gum,
-  git
-  base-devel
+  "gum"
+  "git"
+  "base-devel"
 )
 
 PACMAN_INSTALL_PACKAGES=(
