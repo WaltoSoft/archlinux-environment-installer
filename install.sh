@@ -153,7 +153,7 @@ COLOR_RED='\033[1;31m'
       return;
     fi;
 
-    echo "Installing packages that haven't been installed yet"
+    echo "Installing packages that haven''t been installed yet"
     yay --noconfirm -S "${packagesToInstall[@]}";
     echo "yay packages installation complete."
   }
