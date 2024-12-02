@@ -161,9 +161,9 @@ COLOR_RED='\033[1;31m'
     if [ -n "${isInstalled}" ] ; then
       echo 0 
       return  #package was found
-    fi;
+    fi
     
-    echo 1; #package was not found
+    echo 1 #package was not found
     return  
   }
 #--------------------------------------------------
