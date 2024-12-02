@@ -67,7 +67,7 @@ COLOR_RED='\033[1;31m'
 
     echo "Ensuring folder ${folderPath} exists"
     
-    if [ -d path ] ;then
+    if [ ! -d path ] ;then
       mkdir $folderPath
     fi
 
