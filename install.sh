@@ -29,7 +29,7 @@ COLOR_RED='\033[1;31m'
     sudo pacman -Sy
 
     ensureFolder "${HOME}/Git" true
-    installPackages "${PACMAN_INITIAL_PACKAGES[@]}" true
+    installPackages "${PACMAN_INITIAL_PACKAGES[@]}"
     confirmStart
     installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
     installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
@@ -95,14 +95,7 @@ COLOR_RED='\033[1;31m'
 
     echo "Installing packages that haven't been installed yet"
     sudo pacman --noconfirm -S "${packagesToInstall[@]}";
-
-     if [ "${needed}" = true ] ; then
-       sudo pacman --noconfirm --needed -S "${packagesToInstall[@]}";
-     else
-       sudo pacman --noconfirm -S "${packagesToInstall[@]}";
-     fi
-     
-     echo "pacman package installation complete."
+    echo "pacman package installation complete."
   }
 
   installYay() {
@@ -135,7 +128,7 @@ COLOR_RED='\033[1;31m'
   }
 
   installYayPackages() {
-    packagesToInstall=();
+    packagesToInstall=()
 
     installYay
 
