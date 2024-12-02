@@ -65,6 +65,8 @@ COLOR_RED='\033[1;31m'
     folderPath=$1
     enterPath=$2
 
+    echo $folderPath
+    
     if [ -d path ] ;then
       mkdir $folderPath
     fi
@@ -72,6 +74,7 @@ COLOR_RED='\033[1;31m'
     if [ "${enterPath}" = true ] ; then
       echo "Changing dir to ${folderPath}"
       cd $folderPath
+      pwd
     fi
   }
 
