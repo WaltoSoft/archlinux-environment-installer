@@ -96,7 +96,7 @@ COLOR_RED='\033[1;31m'
       return;
     fi;
 
-    echo "Installing packages that haven't been installed yet"
+    echo "Installing packages that haven''t been installed yet"
     sudo pacman --noconfirm -S "${packagesToInstall[@]}";
     echo "pacman package installation complete."
   }
@@ -137,34 +137,34 @@ COLOR_RED='\033[1;31m'
 
     for package; do
       if [[ $(isPackageInstalled "${package}") == 0 ]]; then
-        echo "Package '${package}' is already installed.";
-        continue;
+        echo "Package '${package}' is already installed."
+        continue
       fi;
         
-      packagesToInstall+=("${package}");
-    done;
+      packagesToInstall+=("${package}")
+    done
 
     if [[ "${packagesToInstall[@]}" == "" ]] ; then
-      echo "All packages are already installed.";
-      return;
-    fi;
+      echo "All packages are already installed."
+      return
+    fi
 
     echo "Installing packages that haven''t been installed yet"
-    yay --noconfirm -S "${packagesToInstall[@]}";
+    yay --noconfirm -S "${packagesToInstall[@]}"
     echo "yay packages installation complete."
   }
 
   isPackageInstalled() {
-    package="$1";
-    isInstalled="$(sudo pacman -Qs --color always "${package}" | grep "local" | grep "${package} ")";
+    package="$1"
+    isInstalled="$(sudo pacman -Qs --color always "${package}" | grep "local" | grep "${package} ")"
 
     if [ -n "${isInstalled}" ] ; then
-      echo 0; 
-      return;  #package was found
+      echo 0 
+      return  #package was found
     fi;
     
     echo 1; #package was not found
-    return;  
+    return  
   }
 #--------------------------------------------------
 
