@@ -28,7 +28,7 @@ COLOR_RED='\033[1;31m'
   executeScript() {
     sudo pacman -Sy
 
-    ensureFolder "${HOME}/Git" true
+    ensureFolder $HOME/Git" true
     installPackages "${PACMAN_INITIAL_PACKAGES[@]}"
     confirmStart
     installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
