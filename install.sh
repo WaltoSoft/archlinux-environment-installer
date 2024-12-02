@@ -111,19 +111,17 @@ COLOR_RED='\033[1;31m'
     else
       echo "Building and Installing yay from source code"
 
-      ensureGitFolder 
+      ensureFolder "${HOME}/Git"
 
       if [ -d ~/Git/yay-git ] ;then
         rm -rf ~/Git/yay-git
         echo "Existing yay-git repo removed"
       fi
 
-      cd ~/Git
-
       echo "Cloning the yay git repository at https://aur.archlinux.org/yay-git"
       git clone https://aur.archlinux.org/yay-git.git
 
-      cd ~/Git/yay-git
+      ensureFolder "${HOME/Git/yay-git" true
 
       echo "Compiling yay source code and installing as a package"
       makepkg -si
@@ -131,7 +129,7 @@ COLOR_RED='\033[1;31m'
       if sudo pacman -Qs yay > /dev/null ; then
         echo "yay has been installed successfully."
       else
-        echo "yay was not insntalled successfully."
+        echo "yay was not installed successfully."
       fi
     fi
   }
