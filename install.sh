@@ -12,6 +12,9 @@ PACMAN_INSTALL_PACKAGES=(
   "nautilus"
   "wofi"
   "hyprland"  
+  "sddm"
+  "code"
+  "gnome-text-editor"
 )
 
 YAY_INSTALL_PACKAGES=(
@@ -22,19 +25,35 @@ COLOR_GREEN='\033[0;32m'
 COLOR_NONE='\033[0m'
 COLOR_RED='\033[1;31m'
 
+BASHRC_TEXT="
+#---------------------------------------------------------
+# Add Customizations
+#---------------------------------------------------------
+source ${HOME}/.bashrc_custom
+"
+
+BASHRC_CUSTOM_TEXT="
+if uwsm check may-start && uwsm select; then
+  exec systemd-cat -t uwsm_start uwsm start default
+fi
+
+if [[ $(tty) == *""pts""* ]] ; then
+  fastfetch
+fi
+"
+
 #--------------------------------------------------
 # Function Declarations
 #--------------------------------------------------
   executeScript() {
     sudo pacman -Sy
 
+    ensureFolder $HOME/Git true
+    installPackages "${PACMAN_INITIAL_PACKAGES[@]}"
+    confirmStart
+    installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
+    installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
     configureShell
-
-    #ensureFolder $HOME/Git true
-    #installPackages "${PACMAN_INITIAL_PACKAGES[@]}"
-    #confirmStart
-    #installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
-    #installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
   }
 
   configureShell(){
@@ -42,30 +61,15 @@ COLOR_RED='\033[1;31m'
 
     if [ ! -e $HOME/.bashrc_custom ] ; then
       echo "Adding a custom .bashrc configuration called ./bashrc_custom.  This gets appended to the actual .bashrc file."
-
-      echo "
-        if uwsm check may-start && uwsm select; then
-          exec systemd-cat -t uwsm_start uwsm start default
-        fi
-
-        if [[ $(tty) == *""pts""* ]] ; then
-          fastfetch
-        fi
-      " > $HOME/.bashrc_custom
+      echo $BASHRC_CUSTOM_TEXT > $HOME/.bashrc_custom
     fi
 
     if [ -e $HOME/.bashrc_custom ] ; then
       hasLink=grep $HOME/.bashrc -e "source ${HOME}/.bashrc_custom"
 
       if [ -z $hashLink ] ; then
-        echo "Calling the .bashrc_custom file."
-
-        echo "
-          #---------------------------------------------------------
-          # Add Customizations
-          #---------------------------------------------------------
-          source ${HOME}/.bashrc_custom
-        " >> $HOME/.bashrc
+        echo "Updating .bashrc to load the .bashrc_custom file."
+        echo $BASHRC_TEXT >> $HOME/.bashrc
       fi
     fi
   }
