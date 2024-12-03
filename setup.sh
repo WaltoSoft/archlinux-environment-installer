@@ -8,9 +8,9 @@ SETUP_BRANCH=""
 #--------------------------------------------------
   setup_executeScript() {
     clear
+    setup_installPackages
     setup_confirmStart
     setup_getCommandLineArgs
-    setup_installPackages
     setup_cloneRepo
     setup_startInstallation
   }
