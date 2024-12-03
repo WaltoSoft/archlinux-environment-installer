@@ -32,10 +32,9 @@ COLOR_RED='\033[1;31m'
           exec systemd-cat -t uwsm_start uwsm start default
         fi
 
-        if [[ $(tty) == *"pts"* ]]; then
+        if [[ $(tty) == *"pts"* ]] ; then
           fastfetch
-        fi
-        " > $HOME/.bashrc_custom
+        fi" > $HOME/.bashrc_custom
     fi
 
     if [ -d $HOME/.bashrc_custom ] ; then
