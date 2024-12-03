@@ -46,8 +46,6 @@ SETUP_BRANCH=""
     echo "Cloning hyprland-installation git repo."
     git clone -q --no-progress --depth 1 https://github.com/waltosoft/hyprland-installation.git
     echo "Clone complete."
-
-
     cd ~/Git/hyprland-installation
 
     if [ ! -z $SETUP_BRANCH ]; then
@@ -62,6 +60,8 @@ SETUP_BRANCH=""
   }
 
   setup_getCommandLineArgs() {
+    echo "Getting command line arguments"
+
     while getopts ":b:" opt; do
       case "${opt}" in
         b) SETUP_BRANCH="${OPTARG}";;
@@ -71,6 +71,8 @@ SETUP_BRANCH=""
            ;;
       esac
     done
+
+    echo "Setup Branch: ${SETUP_BRANCH}
   }
 
   setup_installPackages() {
