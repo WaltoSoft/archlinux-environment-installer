@@ -17,8 +17,8 @@ YAY_INSTALL_PACKAGES=(
 )
 
 COLOR_GREEN='\033[0;32m'
-COLOR_NONE='\033[0m'
 COLOR_RED='\033[1;31m'
+COLOR_CYAN='\033[36m'
 
 #--------------------------------------------------
 # Function Declarations
@@ -26,6 +26,7 @@ COLOR_RED='\033[1;31m'
   # This is the main code for the script.
   executeScript() {
     clear
+    echoInColor $COLOR_CYAN
     confirmStart
     installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
     installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
@@ -64,9 +65,12 @@ COLOR_RED='\033[1;31m'
     local color=$2
 
     echo -e "${color}"
-    echo $text
 
-    echo -e "${COLOR_NONE}"
+    if [ ! -z $text ]; then
+      echo $text
+    fi
+
+    echo -e "${COLOR_CYAN}"
   }
 
   # Ensures the specified folder exists, if it doesn't then create it and optionally change directory to it
