@@ -72,7 +72,7 @@ SETUP_BRANCH=""
       esac
     done
 
-    echo "Setup Branch: ${SETUP_BRANCH}
+    echo "Setup Branch: ${SETUP_BRANCH}"
   }
 
   setup_installPackages() {
