@@ -55,7 +55,7 @@ COLOR_RED='\033[1;31m'
     fi
 
     if [ -e $HOME/.bashrc_custom ] ; then
-      hasLink = grep $HOME/.bashrc -e "source ${HOME}/.bashrc_custom"
+      hasLink=grep $HOME/.bashrc -e "source ${HOME}/.bashrc_custom"
 
       if [ -z $hashLink ] ; then
         echo "Calling the .bashrc_custom file."
