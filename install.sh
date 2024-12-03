@@ -25,14 +25,42 @@ COLOR_RED='\033[1;31m'
 #--------------------------------------------------
 # Function Declarations
 #--------------------------------------------------
+  configureShell(){
+    if [! -d $HOME/.bashrc_custom ] ; then
+      echo "
+        if uwsm check may-start && uwsm select; then
+          exec systemd-cat -t uwsm_start uwsm start default
+        fi
+
+        if [[ $(tty) == *"pts"* ]]; then
+          fastfetch
+        fi
+        " > $HOME/.bashrc_custom
+    fi
+
+    if [ -d $HOME/.bashrc_custom ] ; then
+      hasLink = grep $HOME/.bashrc -e "source ${HOME}/.bashrc_custom"
+
+      if [ -z hashLink ]
+        echo "
+          #---------------------------------------------------------
+          # Add Customizations
+          #---------------------------------------------------------
+          source ${HOME}/.bashrc_custom" >> $HOME/.bashrc
+      fi
+    fi
+  }
+
   executeScript() {
     sudo pacman -Sy
 
-    ensureFolder $HOME/Git true
-    installPackages "${PACMAN_INITIAL_PACKAGES[@]}"
-    confirmStart
-    installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
-    installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
+    configureShell
+
+    #ensureFolder $HOME/Git true
+    #installPackages "${PACMAN_INITIAL_PACKAGES[@]}"
+    #confirmStart
+    #installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
+    #installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
   }
 
   confirmStart() {
