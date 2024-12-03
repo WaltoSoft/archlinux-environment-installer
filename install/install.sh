@@ -34,6 +34,7 @@ INSTALL_DIRECTORY='${HOME}/Git/install'
     sudo pacman -Sqy
     installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
     installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
+    startSDDM
     configureShell
   }
 
@@ -173,6 +174,10 @@ INSTALL_DIRECTORY='${HOME}/Git/install'
     
     echo 1 #package was not found
     return  
+  }
+
+  startSDDM() {
+    sudo systemctl enable sddm.service
   }
 #--------------------------------------------------
 
