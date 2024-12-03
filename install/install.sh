@@ -26,12 +26,20 @@ COLOR_CYAN='\033[36m'
   # This is the main code for the script.
   executeScript() {
     clear
-    echoInColor $COLOR_CYAN
+    changeColor $COLOR_CYAN
     confirmStart
     installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
     installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
     startSDDM
     configureShell
+  }
+
+  changeColor() {
+    local color=$1
+
+    if [ ! -z color ]; then
+      echo -e $color
+    fi
   }
 
   # Copies the .bashrc files in the install folder into the users home directory.
@@ -43,11 +51,11 @@ COLOR_CYAN='\033[36m'
 
   # Confirm that the user is ready to run the installation
   confirmStart() {
-    echoInColor "This script will setup Hyprland" $COLOR_GREEN
+    echo "This script will setup Hyprland"
 
     if gum confirm "DO YOU WANT TO START THE INSTALLATION?" ; then
       echo
-      echoInColor "Installation Starting" $COLOR_GREEN
+      echo "Installation Starting"
     elif [ $? -eq 130 ] ; then
       echo
       echoInColor "Installation Cancelled" $COLOR_RED
@@ -64,13 +72,15 @@ COLOR_CYAN='\033[36m'
     local text=$1
     local color=$2
 
-    echo -e "${color}"
+    if [ ! -z $color ]; then
+      changeColor $color
+    fi
 
     if [ ! -z $text ]; then
       echo $text
     fi
 
-    echo -e "${COLOR_CYAN}"
+    changeColor $COLOR_CYAN
   }
 
   # Ensures the specified folder exists, if it doesn't then create it and optionally change directory to it
