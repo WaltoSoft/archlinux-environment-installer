@@ -25,10 +25,22 @@ COLOR_RED='\033[1;31m'
 #--------------------------------------------------
 # Function Declarations
 #--------------------------------------------------
+  executeScript() {
+    sudo pacman -Sy
+
+    configureShell
+
+    #ensureFolder $HOME/Git true
+    #installPackages "${PACMAN_INITIAL_PACKAGES[@]}"
+    #confirmStart
+    #installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
+    #installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
+  }
+
   configureShell(){
     echo "Checking shell configuration."
 
-    if [! -d $HOME/.bashrc_custom ] ; then
+    if [! -e $HOME/.bashrc_custom ] ; then
       echo "Adding a custom .bashrc configuration called ./bashrc_custom.  This gets appended to the actual .bashrc file."
 
       echo "
@@ -42,7 +54,7 @@ COLOR_RED='\033[1;31m'
       " > $HOME/.bashrc_custom
     fi
 
-    if [ -d $HOME/.bashrc_custom ] ; then
+    if [! -e $HOME/.bashrc_custom ] ; then
       hasLink = grep $HOME/.bashrc -e "source ${HOME}/.bashrc_custom"
 
       if [ -z $hashLink ] ; then
@@ -56,18 +68,6 @@ COLOR_RED='\033[1;31m'
         " >> $HOME/.bashrc
       fi
     fi
-  }
-
-  executeScript() {
-    sudo pacman -Sy
-
-    configureShell
-
-    #ensureFolder $HOME/Git true
-    #installPackages "${PACMAN_INITIAL_PACKAGES[@]}"
-    #confirmStart
-    #installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
-    #installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
   }
 
   confirmStart() {
