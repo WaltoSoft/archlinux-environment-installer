@@ -34,7 +34,8 @@ COLOR_RED='\033[1;31m'
 
         if [[ $(tty) == *"pts"* ]] ; then
           fastfetch
-        fi" > $HOME/.bashrc_custom
+        fi
+      " > $HOME/.bashrc_custom
     fi
 
     if [ -d $HOME/.bashrc_custom ] ; then
@@ -45,7 +46,8 @@ COLOR_RED='\033[1;31m'
           #---------------------------------------------------------
           # Add Customizations
           #---------------------------------------------------------
-          source ${HOME}/.bashrc_custom" >> $HOME/.bashrc
+          source ${HOME}/.bashrc_custom
+        " >> $HOME/.bashrc
       fi
     fi
   }
