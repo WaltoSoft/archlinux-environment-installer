@@ -26,7 +26,11 @@ COLOR_RED='\033[1;31m'
 # Function Declarations
 #--------------------------------------------------
   configureShell(){
+    echo "Checking shell configuration."
+
     if [! -d $HOME/.bashrc_custom ] ; then
+      echo "Adding a custom .bashrc configuration called ./bashrc_custom.  This gets appended to the actual .bashrc file."
+
       echo "
         if uwsm check may-start && uwsm select; then
           exec systemd-cat -t uwsm_start uwsm start default
@@ -42,6 +46,8 @@ COLOR_RED='\033[1;31m'
       hasLink = grep $HOME/.bashrc -e "source ${HOME}/.bashrc_custom"
 
       if [ -z $hashLink ] ; then
+        echo "Calling the .bashrc_custom file."
+
         echo "
           #---------------------------------------------------------
           # Add Customizations
