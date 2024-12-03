@@ -136,7 +136,7 @@ COLOR_RED='\033[1;31m'
 
       # Clone the yay repo
       echo "Cloning the yay git repository at https://aur.archlinux.org/yay-git"
-      git clone --quite --no-progress --depth 1 https://aur.archlinux.org/yay-git.git
+      git clone --quiet --no-progress --depth 1 https://aur.archlinux.org/yay-git.git
 
       cd ~/Git/yay-git
 
