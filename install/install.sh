@@ -83,7 +83,8 @@ INSTALL_DIRECTORY='${HOME}/Git/install'
     if [ "${enterPath}" = true ] ; then
       echo "Changing dir to ${folderPath}"
       cd $folderPath
-      echo "Current path: ${pwd}"
+      echo "Current path: "
+      pwd
     fi
   }
 
