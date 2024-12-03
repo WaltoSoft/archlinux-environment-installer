@@ -7,7 +7,23 @@ SETUP_BRANCH=""
 # Function declarations
 #--------------------------------------------------
   setup_executeScript() {
-    clear
+    echo "Getting command line arguments"
+
+    getopts ":b:" test;
+    echo "Args ${test}";
+
+    while getopts ":b:" opt; do
+      case "${opt}" in
+        b) SETUP_BRANCH="${OPTARG}";;
+        :) exit 1;;
+        ?) echo "Invalid option: -${OPTARG}." 
+           exit 1
+           ;;
+      esac
+    done
+
+    echo "Setup Branch: ${SETUP_BRANCH}"
+
     setup_installPackages
     setup_confirmStart
     setup_getCommandLineArgs
@@ -57,25 +73,6 @@ SETUP_BRANCH=""
 
       git checkout $SETUP_BRANCH
     fi
-  }
-
-  setup_getCommandLineArgs() {
-    echo "Getting command line arguments"
-
-    getopts ":b:" test;
-    echo "Args ${test}";
-
-    while getopts ":b:" opt; do
-      case "${opt}" in
-        b) SETUP_BRANCH="${OPTARG}";;
-        :) exit 1;;
-        ?) echo "Invalid option: -${OPTARG}." 
-           exit 1
-           ;;
-      esac
-    done
-
-    echo "Setup Branch: ${SETUP_BRANCH}"
   }
 
   setup_installPackages() {
