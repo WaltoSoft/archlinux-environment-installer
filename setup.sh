@@ -62,6 +62,9 @@ SETUP_BRANCH=""
   setup_getCommandLineArgs() {
     echo "Getting command line arguments"
 
+    getopts ":b:" test;
+    echo "Args ${test}";
+
     while getopts ":b:" opt; do
       case "${opt}" in
         b) SETUP_BRANCH="${OPTARG}";;
