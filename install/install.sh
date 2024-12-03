@@ -1,18 +1,13 @@
 #--------------------------------------------------
 # Declare variables
 #--------------------------------------------------
-PACMAN_INITIAL_PACKAGES=(
-  "gum"
-  "git"
-  "base-devel"
-)
-
 PACMAN_INSTALL_PACKAGES=(
+  "hyprland"  
+  "sddm"
+  "vim"
   "kitty"
   "nautilus"
   "wofi"
-  "hyprland"  
-  "sddm"
   "code"
   "gnome-text-editor"
 )
@@ -25,53 +20,27 @@ COLOR_GREEN='\033[0;32m'
 COLOR_NONE='\033[0m'
 COLOR_RED='\033[1;31m'
 
-BASHRC_TEXT="
-#---------------------------------------------------------\n
-# Add Customizations\n
-#---------------------------------------------------------\n
-source ${HOME}/.bashrc_custom\n
-"
+INSTALL_DIRECTORY='${HOME}/Git/install'
 
-BASHRC_CUSTOM_TEXT="
-if uwsm check may-start && uwsm select; then\n
-  exec systemd-cat -t uwsm_start uwsm start default\n
-fi\n
-\n
-if [[ $(tty) == *""pts""* ]] ; then\n
-  fastfetch\n
-fi\n
-"
 
 #--------------------------------------------------
 # Function Declarations
 #--------------------------------------------------
   executeScript() {
-    sudo pacman -Sy
-
-    ensureFolder $HOME/Git true
-    installPackages "${PACMAN_INITIAL_PACKAGES[@]}"
+    clear
     confirmStart
+
+    cd $INSTALL_DIRECTORY
+    sudo pacman -Sqy
     installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
     installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
     configureShell
   }
 
   configureShell(){
-    echo "Checking shell configuration."
-
-    if [ ! -e $HOME/.bashrc_custom ] ; then
-      echo "Adding a custom .bashrc configuration called ./bashrc_custom.  This gets appended to the actual .bashrc file."
-      echo $BASHRC_CUSTOM_TEXT > $HOME/.bashrc_custom
-    fi
-
-    if [ -e $HOME/.bashrc_custom ] ; then
-      hasLink=grep $HOME/.bashrc -e "source ${HOME}/.bashrc_custom"
-
-      if [ -z $hashLink ] ; then
-        echo "Updating .bashrc to load the .bashrc_custom file."
-        echo $BASHRC_TEXT >> $HOME/.bashrc
-      fi
-    fi
+    echo "Copying Shell configuration"
+    cp $INSTALL_DIRECTORY/home/.bashrc ~/.bashrc
+    cp $INSTALL_DIRECTORY/home/.bashrc_custom ~/.bashrc_custom
   }
 
   confirmStart() {
@@ -146,17 +115,17 @@ fi\n
     else
       echo "Building and Installing yay from source code"
 
-      ensureFolder ${HOME}/Git
+      ensureFolder ~/Git
 
-      if [ -d ${HOME}/Git/yay-git ] ;then
-        rm -rf ${HOME}/Git/yay-git
+      if [ -d ~/Git/yay-git ]; then
+        rm -rf ~/Git/yay-git
         echo "Existing yay-git repo removed"
       fi
 
       echo "Cloning the yay git repository at https://aur.archlinux.org/yay-git"
-      git clone https://aur.archlinux.org/yay-git.git
+      git clone -q --no-progress --depth 1 https://aur.archlinux.org/yay-git.git
 
-      ensureFolder "${HOME}/Git/yay-git" true
+      ensureFolder ~/Git/yay-git true
 
       echo "Compiling yay source code and installing as a package"
       makepkg -si
