@@ -7,19 +7,6 @@ SETUP_BRANCH=""
 # Function declarations
 #--------------------------------------------------
   setup_executeScript() {
-    while getopts ":b:" option; do
-      case $option in
-        b) SETUP_BRANCH=$OPTARG
-           ;;
-        :) exit 1;;
-       \?) echo "Invalid option: -${OPTARG}." 
-           exit 1
-           ;;
-      esac
-    done
-
-    echo "Setup Branch: ${SETUP_BRANCH}"
-
     setup_installPackages
     setup_confirmStart
     setup_cloneRepo
@@ -82,4 +69,16 @@ SETUP_BRANCH=""
   }
 #--------------------------------------------------
 
+while getopts ":b:" option; do
+  case $option in
+    b) SETUP_BRANCH=$OPTARG
+        ;;
+    :) exit 1;;
+    \?) echo "Invalid option: -${OPTARG}." 
+        exit 1
+        ;;
+  esac
+done
+
+echo "Setup Branch: ${SETUP_BRANCH}"
 setup_executeScript
