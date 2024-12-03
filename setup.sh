@@ -26,7 +26,6 @@ SETUP_BRANCH=""
 
     setup_installPackages
     setup_confirmStart
-    setup_getCommandLineArgs
     setup_cloneRepo
     setup_startInstallation
   }
