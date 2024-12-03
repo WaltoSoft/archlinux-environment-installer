@@ -7,16 +7,12 @@ SETUP_BRANCH=""
 # Function declarations
 #--------------------------------------------------
   setup_executeScript() {
-    echo "Getting command line arguments"
-
-    getopts ":b:" test;
-    echo "Args ${test}";
-
-    while getopts ":b:" opt; do
-      case "${opt}" in
-        b) SETUP_BRANCH="${OPTARG}";;
+    while getopts ":b:" option; do
+      case $option in
+        b) SETUP_BRANCH=$OPTARG
+           ;;
         :) exit 1;;
-        ?) echo "Invalid option: -${OPTARG}." 
+       \?) echo "Invalid option: -${OPTARG}." 
            exit 1
            ;;
       esac
