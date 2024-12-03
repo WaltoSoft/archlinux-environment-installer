@@ -4,12 +4,15 @@
 PACMAN_INSTALL_PACKAGES=(
   "hyprland"  
   "sddm"
+  "fastfetch"
   "vim"
   "kitty"
   "nautilus"
   "wofi"
   "code"
   "gnome-text-editor"
+  "less"
+  "man-db"
 )
 
 YAY_INSTALL_PACKAGES=(
