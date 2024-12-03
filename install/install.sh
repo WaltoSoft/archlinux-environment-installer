@@ -56,6 +56,7 @@ COLOR_CYAN='\033[36m'
     if gum confirm "DO YOU WANT TO START THE INSTALLATION?" ; then
       echo
       echo "Installation Starting"
+      changeColor $COLOR_CYAN
     elif [ $? -eq 130 ] ; then
       echo
       echoInColor "Installation Cancelled" $COLOR_RED
