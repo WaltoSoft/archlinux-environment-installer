@@ -41,7 +41,7 @@ COLOR_RED='\033[1;31m'
     if [ -d $HOME/.bashrc_custom ] ; then
       hasLink = grep $HOME/.bashrc -e "source ${HOME}/.bashrc_custom"
 
-      if [ -z hashLink ]
+      if [ -z hashLink ] ; then
         echo "
           #---------------------------------------------------------
           # Add Customizations
