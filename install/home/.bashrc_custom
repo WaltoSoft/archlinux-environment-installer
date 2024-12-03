@@ -2,12 +2,8 @@ if uwsm check may-start && uwsm select; then
   exec systemd-cat -t uwsm_start uwsm start default
 fi
 
-# -----------------------------------------------------
-# Fastfetch if in Hyprland
-# -----------------------------------------------------
+# If we are starting from a terminal then display the output of fastfetch
 if [[ $(tty) == *"pts"* ]]; then
-    fastfetch
-else
-    echo
-    echo "Start Hyprland with command Hyprland"
+  fastfetch
 fi
+
