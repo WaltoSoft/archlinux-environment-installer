@@ -36,8 +36,8 @@ COLOR_RED='\033[1;31m'
   # Copies the .bashrc files in the install folder into the users home directory.
   configureShell(){
     echo "Copying Shell configuration"
-    cp ~/Git/hyprland-installation/home/.bashrc ~/.bashrc
-    cp ~/Git/hyprland-installation/home/.bashrc_custom ~/.bashrc_custom
+    cp ~/Git/hyprland-installation/install/home/.bashrc ~/.bashrc
+    cp ~/Git/hyprland-installation/install/home/.bashrc_custom ~/.bashrc_custom
   }
 
   # Confirm that the user is ready to run the installation
@@ -112,7 +112,7 @@ COLOR_RED='\033[1;31m'
 
     # Installing those packages that haven't already been installed
     echo "Installing packages that haven''t been installed yet"
-    sudo pacman --noconfirm -S "${packagesToInstall[@]}"
+    sudo pacman --quiet --noconfirm -S "${packagesToInstall[@]}"
     echo "pacman package installation complete."
   }
 
@@ -174,7 +174,7 @@ COLOR_RED='\033[1;31m'
 
     # Installing those packages which haven't already been installed
     echo "Installing packages that haven''t been installed yet"
-    yay --noconfirm -S "${packagesToInstall[@]}"
+    yay --quiet --noconfirm -S "${packagesToInstall[@]}"
     echo "yay packages installation complete."
   }
 
