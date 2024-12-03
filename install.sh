@@ -40,7 +40,7 @@ COLOR_RED='\033[1;31m'
   configureShell(){
     echo "Checking shell configuration."
 
-    if [! -e $HOME/.bashrc_custom ] ; then
+    if [ ! -e $HOME/.bashrc_custom ] ; then
       echo "Adding a custom .bashrc configuration called ./bashrc_custom.  This gets appended to the actual .bashrc file."
 
       echo "
@@ -54,7 +54,7 @@ COLOR_RED='\033[1;31m'
       " > $HOME/.bashrc_custom
     fi
 
-    if [! -e $HOME/.bashrc_custom ] ; then
+    if [ ! -e $HOME/.bashrc_custom ] ; then
       hasLink = grep $HOME/.bashrc -e "source ${HOME}/.bashrc_custom"
 
       if [ -z $hashLink ] ; then
