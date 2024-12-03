@@ -26,20 +26,20 @@ COLOR_NONE='\033[0m'
 COLOR_RED='\033[1;31m'
 
 BASHRC_TEXT="
-#---------------------------------------------------------
-# Add Customizations
-#---------------------------------------------------------
-source ${HOME}/.bashrc_custom
+#---------------------------------------------------------\n
+# Add Customizations\n
+#---------------------------------------------------------\n
+source ${HOME}/.bashrc_custom\n
 "
 
 BASHRC_CUSTOM_TEXT="
-if uwsm check may-start && uwsm select; then
-  exec systemd-cat -t uwsm_start uwsm start default
-fi
-
-if [[ $(tty) == *""pts""* ]] ; then
-  fastfetch
-fi
+if uwsm check may-start && uwsm select; then\n
+  exec systemd-cat -t uwsm_start uwsm start default\n
+fi\n
+\n
+if [[ $(tty) == *""pts""* ]] ; then\n
+  fastfetch\n
+fi\n
 "
 
 #--------------------------------------------------
