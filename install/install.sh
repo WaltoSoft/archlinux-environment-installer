@@ -20,30 +20,27 @@ COLOR_GREEN='\033[0;32m'
 COLOR_NONE='\033[0m'
 COLOR_RED='\033[1;31m'
 
-INSTALL_DIRECTORY='${HOME}/Git/install'
-
-
 #--------------------------------------------------
 # Function Declarations
 #--------------------------------------------------
+  # This is the main code for the script.
   executeScript() {
     clear
     confirmStart
-
-    cd $INSTALL_DIRECTORY
-    sudo pacman -Sqy
     installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
     installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
     startSDDM
     configureShell
   }
 
+  # Copies the .bashrc files in the install folder into the users home directory.
   configureShell(){
     echo "Copying Shell configuration"
-    cp $INSTALL_DIRECTORY/home/.bashrc ~/.bashrc
-    cp $INSTALL_DIRECTORY/home/.bashrc_custom ~/.bashrc_custom
+    cp ~/Git/hyprland-installation/home/.bashrc ~/.bashrc
+    cp ~/Git/hyprland-installation/home/.bashrc_custom ~/.bashrc_custom
   }
 
+  # Confirm that the user is ready to run the installation
   confirmStart() {
     echoInColor "This script will setup Hyprland" $COLOR_GREEN
 
@@ -61,18 +58,21 @@ INSTALL_DIRECTORY='${HOME}/Git/install'
     fi
   }
 
+  # The same as echo, it just outputs the text with the specified color.
   echoInColor() {
-    color=$2
+    local text=$1
+    local color=$2
 
     echo -e "${color}"
-    echo $1
+    echo $text
 
     echo -e "${COLOR_NONE}"
   }
 
+  # Ensures the specified folder exists, if it doesn't then create it and optionally change directory to it
   ensureFolder() {
-    folderPath=$1
-    enterPath=$2
+    local folderPath=$1
+    local enterPath=$2
 
     echo "Ensuring folder ${folderPath} exists"
     
@@ -88,50 +88,63 @@ INSTALL_DIRECTORY='${HOME}/Git/install'
     fi
   }
 
+  # Installs the packages in the PACMAN_INSTALL_PACKAGES array via pacman
   installPackages() {
-    packagesToInstall=();
-    needed = $1
+    local packagesToInstall=();
 
+    # Update the pacman databases
+    sudo pacman -Sy
+
+    # Check to see which packages haven't already been installed
     for package; do
       if [[ $(isPackageInstalled "${package}") == 0 ]]; then
-        echo "${package} is already installed.";
-        continue;
+        continue
       fi;
       
-      packagesToInstall+=("${package}");
+      packagesToInstall+=("${package}")
     done;
 
+    # Check to see if all of the packages have already been installed
     if [[ "${packagesToInstall[@]}" == "" ]] ; then
-      echo "All pacman packages are already installed.";
-      return;
+      echo "All pacman packages are already installed."
+      return
     fi;
 
+    # Installing those packages that haven't already been installed
     echo "Installing packages that haven''t been installed yet"
-    sudo pacman --noconfirm -S "${packagesToInstall[@]}";
+    sudo pacman --noconfirm -S "${packagesToInstall[@]}"
     echo "pacman package installation complete."
   }
 
+  # Installs the Yay helper
   installYay() {
+    # check to see if yay is already installed
     if sudo pacman -Qs yay > /dev/null ; then
       echo "yay is already installed!"
     else
       echo "Building and Installing yay from source code"
 
       ensureFolder ~/Git
+      pwd
 
+      # If the yay-git repo already exists it, then remove it
+      # so we are sure to get the latest version
       if [ -d ~/Git/yay-git ]; then
         rm -rf ~/Git/yay-git
         echo "Existing yay-git repo removed"
       fi
 
+      # Clone the yay repo
       echo "Cloning the yay git repository at https://aur.archlinux.org/yay-git"
       git clone --depth 1 https://aur.archlinux.org/yay-git.git
 
-      ensureFolder ~/Git/yay-git true
+      cd ~/Git/yay-git
 
+      # Compiles the source code and then installs it via pacman
       echo "Compiling yay source code and installing as a package"
       makepkg -si
 
+      # Check to see if yay is now installed via pacman
       if sudo pacman -Qs yay > /dev/null ; then
         echo "yay has been installed successfully."
       else
@@ -140,33 +153,38 @@ INSTALL_DIRECTORY='${HOME}/Git/install'
     fi
   }
 
+  # Installs those yay packages defined in the YAY_INSTALL_PACKAGES array
   installYayPackages() {
-    packagesToInstall=()
+    local packagesToInstall=()
 
     installYay
 
+    # Determining which packages need to be installed
     for package; do
       if [[ $(isPackageInstalled "${package}") == 0 ]]; then
-        echo "Package ''${package}'' is already installed."
         continue
       fi;
         
       packagesToInstall+=("${package}")
     done
 
+    # Check to see if all of the packages have already been installed
     if [[ "${packagesToInstall[@]}" == "" ]] ; then
       echo "All packages are already installed."
       return
     fi
 
+    # Installing those packages which haven't already been installed
     echo "Installing packages that haven''t been installed yet"
     yay --noconfirm -S "${packagesToInstall[@]}"
     echo "yay packages installation complete."
   }
 
+  # Checks to see if the package passed in has alredy been 
+  # installed via pacman
   isPackageInstalled() {
-    package="$1"
-    isInstalled="$(sudo pacman -Qs --color always "${package}" | grep "local" | grep "${package} ")"
+    local package="$1"
+    local isInstalled="$(sudo pacman -Qs --color always "${package}" | grep "local" | grep "${package} ")"
 
     if [ -n "${isInstalled}" ] ; then
       echo 0 
@@ -177,6 +195,7 @@ INSTALL_DIRECTORY='${HOME}/Git/install'
     return  
   }
 
+  # Start the SDDM service
   startSDDM() {
     sudo systemctl enable sddm.service
   }
