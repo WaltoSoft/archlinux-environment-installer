@@ -124,9 +124,6 @@ COLOR_RED='\033[1;31m'
     else
       echo "Building and Installing yay from source code"
 
-      ensureFolder ~/Git
-      pwd
-
       # If the yay-git repo already exists it, then remove it
       # so we are sure to get the latest version
       if [ -d ~/Git/yay-git ]; then
@@ -135,9 +132,10 @@ COLOR_RED='\033[1;31m'
       fi
 
       # Clone the yay repo
+      ensureFolder ~/Git
+      cd ~/Git
       echo "Cloning the yay git repository at https://aur.archlinux.org/yay-git"
       git clone --quiet --no-progress --depth 1 https://aur.archlinux.org/yay-git.git
-
       cd ~/Git/yay-git
 
       # Compiles the source code and then installs it via pacman
