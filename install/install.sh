@@ -125,7 +125,7 @@ INSTALL_DIRECTORY='${HOME}/Git/install'
       fi
 
       echo "Cloning the yay git repository at https://aur.archlinux.org/yay-git"
-      git clone -q --no-progress --depth 1 https://aur.archlinux.org/yay-git.git
+      git clone --depth 1 https://aur.archlinux.org/yay-git.git
 
       ensureFolder ~/Git/yay-git true
 
