@@ -10,7 +10,6 @@ PACMAN_INSTALL_PACKAGES=(
   "chromium"
   "nautilus"
   "wofi"
-  "code"
   "gnome-text-editor"
   "less"
   "man-db"
@@ -19,6 +18,7 @@ PACMAN_INSTALL_PACKAGES=(
 YAY_INSTALL_PACKAGES=(
   "uwsm"
   "sddm-theme-sugar-candy-git"
+  "visual-studio-code-bin"
 )
 
 COLOR_GREEN='\033[0;32m'
