@@ -31,12 +31,12 @@ COLOR_CYAN='\033[36m'
   # This is the main code for the script.
   executeScript() {
     clear
-#    changeColor $COLOR_CYAN
-#    confirmStart
-#    installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
-#    installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
+    changeColor $COLOR_CYAN
+    confirmStart
+    installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
+    installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
     setupsddm
-#    configureShell
+    configureShell
   }
 
   changeColor() {
@@ -92,19 +92,16 @@ COLOR_CYAN='\033[36m'
   # Ensures the specified folder exists, if it doesn't then create it and optionally change directory to it
   ensureFolder() {
     local folderPath=$1
-    local enterPath=$2
+    local useSudo=$2
 
     echo "Ensuring folder ${folderPath} exists"
     
     if [ ! -d $folderPath ] ;then
-      mkdir $folderPath
-    fi
-
-    if [ "${enterPath}" = true ] ; then
-      echo "Changing dir to ${folderPath}"
-      cd $folderPath
-      echo "Current path: "
-      pwd
+      if [ $useSudo = True ]; then
+        sudo mkdir $folderPath
+      else
+        mkdir $folderPath
+      fi
     fi
   }
 
@@ -215,15 +212,12 @@ COLOR_CYAN='\033[36m'
 
   # Start the SDDM service
   setupsddm() {
-    ensureFolder /etc/sddm.conf.d
+    ensureFolder "/etc/sddm.conf.d" True
+
     sudo cp /usr/lib/sddm/sddm.conf.d/default.conf /etc/sddm.conf.d/sddm.conf
-
-    sudo python ~/Git/hyprland-installation/install/iniupdate.py /etc/sddm.conf.d/sddm.conf Theme Current Sugar-Candy
-    
+    sudo python ~/Git/hyprland-installation/install/iniupdate.py /etc/sddm.conf.d/sddm.conf Theme Current Sugar-Candy  
     sudo python ~/Git/hyprland-installation/install/iniupdate.py /usr/share/sddm/themes/Sugar-Candy/theme.conf General HourFormat '"h:mm AP"'
-
     sudo python ~/Git/hyprland-installation/install/iniupdate.py /usr/share/sddm/themes/Sugar-Candy/theme.conf General DateFormat '"dddd, MMMM d"'
-
     sudo systemctl enable sddm.service
   }
 #--------------------------------------------------
