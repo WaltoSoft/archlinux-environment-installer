@@ -21,4 +21,4 @@ The following additional tools are installed:
 2   fastfetch (I have configured .bashrc to use this to display system information when launching a terminal)
 2.  git
 4.  less (used by git)
-5.  man-db (used by man)
+5.  man-db (used by man, which is used by git --help)
