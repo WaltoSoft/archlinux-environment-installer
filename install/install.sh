@@ -7,6 +7,7 @@ PACMAN_INSTALL_PACKAGES=(
   "fastfetch"
   "vim"
   "kitty"
+  "chromium"
   "nautilus"
   "wofi"
   "code"
@@ -17,6 +18,7 @@ PACMAN_INSTALL_PACKAGES=(
 
 YAY_INSTALL_PACKAGES=(
   "uwsm"
+  "sddm-theme-sugar-candy-git"
 )
 
 COLOR_GREEN='\033[0;32m'
@@ -29,12 +31,12 @@ COLOR_CYAN='\033[36m'
   # This is the main code for the script.
   executeScript() {
     clear
-    changeColor $COLOR_CYAN
-    confirmStart
-    installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
-    installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
-    startSDDM
-    configureShell
+#    changeColor $COLOR_CYAN
+#    confirmStart
+#    installPackages "${PACMAN_INSTALL_PACKAGES[@]}"
+#    installYayPackages "${YAY_INSTALL_PACKAGES[@]}"
+    setupsddm
+#    configureShell
   }
 
   changeColor() {
@@ -212,7 +214,16 @@ COLOR_CYAN='\033[36m'
   }
 
   # Start the SDDM service
-  startSDDM() {
+  setupsddm() {
+    ensureFolder /etc/sddm.conf.d
+    sudo cp /usr/lib/sddm/sddm.conf.d/default.conf /etc/sddm.conf.d/sddm.conf
+
+    sudo python ~/Git/hyprland-installation/install/iniupdate.py /etc/sddm.conf.d/sddm.conf Theme Current Sugar-Candy
+    
+    sudo python ~/Git/hyprland-installation/install/iniupdate.py /usr/share/sddm/themes/Sugar-Candy/theme.conf General HourFormat '"h:mm AP"'
+
+    sudo python ~/Git/hyprland-installation/install/iniupdate.py /usr/share/sddm/themes/Sugar-Candy/theme.conf General DateFormat '"dddd, MMMM d"'
+
     sudo systemctl enable sddm.service
   }
 #--------------------------------------------------
