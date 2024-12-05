@@ -8,26 +8,8 @@ SETUP_BRANCH=""
 #--------------------------------------------------
   setup_executeScript() {
     setup_installPackages
-    setup_confirmStart
     setup_cloneRepo
     setup_startInstallation
-  }
-
-  setup_confirmStart() {
-    echo "This script will setup Hyprland"
-
-    if gum confirm "DO YOU WANT TO START THE INSTALLATION?"; then
-      echo
-      echo "Installation Starting" 
-    elif [ $? -eq 130 ]; then
-      echo
-      echo "Installation Cancelled"
-      exit 130
-    else
-      echo
-      echo "Installation Cancelled"
-      exit
-    fi
   }
 
   setup_cloneRepo() {
@@ -37,14 +19,14 @@ SETUP_BRANCH=""
 
     cd ~/Git
 
-    if [ -d ~/Git/hyprland-installation ]; then
-      rm -rf ~/Git/hyprland-installation
+    if [ -d ~/Git/archlinux-environment-installer ]; then
+      rm -rf ~/Git/archlinux-environment-installer
     fi
 
-    echo "Cloning hyprland-installation git repo."
-    git clone -q --no-progress --depth 1 https://github.com/waltosoft/hyprland-installation.git
+    echo "Cloning archlinux-environment-installer git repo."
+    git clone -q --no-progress --depth 1 https://github.com/waltosoft/archlinux-environment-installer.git
     echo "Clone complete."
-    cd ~/Git/hyprland-installation
+    cd ~/Git/archlinux-environment-installer
 
     if [ ! -z $SETUP_BRANCH ]; then
       git config --get remote.origin.fetch
@@ -64,7 +46,7 @@ SETUP_BRANCH=""
 
   setup_startInstallation() {
     echo "Starting Installation."    
-    cd ~/Git/hyprland-installation
+    cd ~/Git/archlinux-environment-installer
     ./install/install.sh
   }
 #--------------------------------------------------

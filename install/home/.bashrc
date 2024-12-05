@@ -1,5 +1,7 @@
 #
 # .basrc
+#
+#
 # The contents of this file are exactly as they appear in the .bashrc that gets installed with archinstall.
 # The only difference is the addition of the "Add Customizations" section at the bottom.
 # To customize this setup, please make your changes in the ~/.bashrc_custom file so that we preserve the original .bashrc as it was installed by archinstall.
