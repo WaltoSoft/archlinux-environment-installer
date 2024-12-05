@@ -22,3 +22,7 @@ The following additional tools are installed:
 2.  git
 4.  less (used by git)
 5.  man-db (used by man, which is used by git --help)
+6.  uwsm (used by system-d to launch Hyprland)
+7.  rysnc (used by the setup script)
+8.  gum (used by th install script to prompt the user)
+9.  wofi (used to display a graphical menu)
