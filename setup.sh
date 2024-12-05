@@ -41,7 +41,7 @@ SETUP_BRANCH=""
 
   setup_installPackages() {
     sudo pacman --noconfirm -Sqy
-    sudo pacman --noconfirm -Sq git gum
+    sudo pacman --noconfirm -Sq git gum rsync
   }
 
   setup_startInstallation() {
