@@ -1,48 +1,34 @@
-changeColor() {
-  local color=$1
-
-  if [ ! -z color ]; then
-    echo -e $color
-  fi
-}
-
-# Confirm that the user is ready to run the installation
 confirmStart() {
-   echoInColor "This script will setup Hyprland" $COLOR_GREEN
+  echo-color "Installation" $COLOR_AQUA True
+  echo "This script will setup Hyprland" 
 
-  if gum confirm "DO YOU WANT TeO START THE INSTALLATION?" ; then
+  if gum confirm "DO YOU WANT TO START THE INSTALLATION?" ; then
     echo
-    echoInColor "Installation Starting" $COLOR_GREEN
+    echo-color "Installation Starting" $COLOR_GREEN
   elif [ $? -eq 130 ] ; then
     echo
-    echoInColor "Installation Cancelled" $COLOR_RED
+    echo-color "Installation Cancelled" $COLOR_RED
     exit 130
   else
     echo
-    echoInColor "Installation Cancelled" $COLOR_RED
+    echo-color "Installation Cancelled" $COLOR_RED
     exit
   fi
-
-  changeColor $COLOR_NONE
 }
 
-# The same as echo, it just outputs the text with the specified color.
-echoInColor() {
-  local text=$1
-  local color=$2
+echo-color() {
+  local text="$1"
+  local color="$2"
+  local useFiglet="$3"
 
-  if [ -n "${color}" ]; then
-    changeColor $color
+  if [ ! -z $useFiglet ] && [ $useFiglet = True ]; then
+    local outputText=$(figlet "${text}")
+    gum style --foreground $color --border-foreground $color --align "center" --border double --margin "1 2" --padding "2 4" "${outputText}"
+  else
+    gum style --foreground $color "${text}"
   fi
-
-  if [ -n "${text}" ]; then
-    echo $text
-  fi
-
-  changeColor $COLOR_NONE
 }
 
-# Ensures the specified folder exists, if it doesn't then create it and optionally change directory to it
 ensureFolder() {
   local folderPath=$1
   local useSudo=$2
@@ -57,6 +43,3 @@ ensureFolder() {
     fi
   fi
 }
-
-clear
-confirmStart

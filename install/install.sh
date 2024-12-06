@@ -1,3 +1,5 @@
+set -e
+
 REPO_DIR=$HOME/Git/archlinux-environment-installer
 INSTALL_DIR=$REPO_DIR/install
 SCRIPTS_DIR=$INSTALL_DIR/scripts
@@ -29,8 +31,8 @@ MY_YAY_PACKAGES=(
   "visual-studio-code-bin"    
 )
 
-COLOR_GREEN='\033[0;32m'
-COLOR_RED='\033[1;31m'
-COLOR_NONE='\033[0m'
+COLOR_AQUA=14
+COLOR_GREEN=10
+COLOR_RED=9
 
 source "${SCRIPTS_DIR}/main.sh"

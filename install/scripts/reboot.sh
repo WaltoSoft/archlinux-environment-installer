@@ -1,3 +1,5 @@
+clear
+echo-color "Reboot" $COLOR_AQUA True
 echo "A reboot of your system is recommended."
 echo
 if gum confirm "Would you like to reboot now?" ; then
