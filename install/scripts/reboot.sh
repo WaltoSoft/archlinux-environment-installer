@@ -3,7 +3,7 @@ executeScript() {
   echo-text -fc $COLOR_AQUA "Reboot"
   echo-text "A reboot of your system is recommended."
   echo-text
-  if askUser -c "Would you like to reboot now?" ; then
+  if [ $(askUser -c "Would you like to reboot now?") -eq 0 ] ; then
     echo-text "Rebooting..."
     systemctl reboot
   elif [ $? -eq 130 ]; then
@@ -16,4 +16,4 @@ executeScript() {
   echo-text -c $COLOR_GREEN "Installation Complete!"
 }
 
-executeScript()
+executeScript

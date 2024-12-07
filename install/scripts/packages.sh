@@ -19,7 +19,7 @@ installPackages() {
   # Check to see which packages haven't already been installed
   for package; do
     if [ $(isPackageInstalled "${package}") -eq 0 ]; then
-      echo "Pacman package '${package}' is already installed" 2>&1 | sudo tee -a $LOG_FILE > /dev/null
+      echo-text "Pacman package '${package}' is already installed"
       continue
     fi;
     
@@ -31,8 +31,8 @@ installPackages() {
     echo-text "All pacman packages are already installed."
   else
     # Installing those packages that haven't already been installed
-    echo-text "Installing pacman packages: ${packagesToInstall[@]}."
-    gum spin --title "Installing pacman packages" --show-output -- sudo pacman -Sq --noconfirm "${packagesToInstall[@]}" 2>&1 | sudo tee -a $LOG_FILE
+    echo-text "Installing pacman packages: ${packagesToInstall[*]}."
+    sudo pacman -Sq --noconfirm "${packagesToInstall[@]}" 2>&1 | sudo tee -a $LOG_FILE
     echo-text "pacman package installation complete."
   fi
 }
@@ -56,7 +56,7 @@ installYay() {
 
     # Compiles the source code and then installs it via pacman
     echo-text "Compiling yay source code and installing as a package"
-    gum spin --title "Compiling yay" --show-output -- makepkg -si 2>&1 | sudo tee -a $LOG_FILE > /dev/null
+    makepkg -si 2>&1 | sudo tee -a $LOG_FILE > /dev/null
 
     # Check to see if yay is now installed via pacman
     if sudo pacman -Qs yay > /dev/null ; then
@@ -91,7 +91,7 @@ installYayPackages() {
 
   # Installing those packages which haven't already been installed
   echo-text "Installing packages that haven''t been installed yet"
-  gum spin --title "Installing yay packages" --show-output -- yay --quiet --noconfirm -S "${packagesToInstall[@]}" 2>&1 | sudo tee -a $LOG_FILE > /dev/null
+  yay --quiet --noconfirm -S "${packagesToInstall[@]}" 2>&1 | sudo tee -a $LOG_FILE > /dev/null
   echo-text "yay packages installation complete."
 }
 
