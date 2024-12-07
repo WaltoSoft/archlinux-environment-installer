@@ -12,6 +12,7 @@ executeScript() {
 }
 
 cloneRepo() {
+  echo "Got Here"
   if [ ! -d "${GIT_DIR}" ]; then
     sudo -u $SUDO_USER mkdir -p "${GIT_DIR}"
   fi
@@ -97,6 +98,7 @@ set -e
 
 if [ "$EUID" -ne 0 ]; then
   echo "Please use sudo when running this script"
+  exit 1
 fi
 
 while getopts ":b:" option; do
