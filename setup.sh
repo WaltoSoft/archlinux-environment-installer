@@ -1,7 +1,5 @@
-set -e
-
 executeScript() {
-  local GIT_DIR=${HOME}/Git
+  local GIT_DIR=/home/$SUDO_USER/Git
   local REPO_BRANCH=$1
   local REPO_NAME="archlinux-environment-installer"
   local REPO_DIR="${GIT_DIR}/${REPO_NAME}"
@@ -15,7 +13,7 @@ executeScript() {
 
 cloneRepo() {
   if [ ! -d "${GIT_DIR}" ]; then
-    mkdir -p "${GIT_DIR}"
+    sudo -u $SUDO_USER mkdir -p "${GIT_DIR}"
   fi
 
   if [ -d "${REPO_DIR}" ]; then
@@ -23,18 +21,18 @@ cloneRepo() {
   fi
 
   echo "Cloning ${REPO_NAME} git repo."
-  git clone -q --no-progress --depth 1 $RPEO_URL "${REPO_DIR}"
+  sudo -u $SUDO_USER git clone -q --no-progress --depth 1 $RPEO_URL "${REPO_DIR}"
   echo "Clone complete."
   cd $REPO_DIR
 
   if [ ! -z "${REPO_BRANCH}" ]; then
-    git config --get remote.origin.fetch > /dev/null
-    git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*" > /dev/null
-    git config --get remote.origin.fetch > /dev/null
-    git remote update > /dev/null
-    git fetch > /dev/null
+    sudo -u $SUDO_USER git config --get remote.origin.fetch > /dev/null
+    sudo -u $SUDO_USER git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*" > /dev/null
+    sudo -u $SUDO_USER git config --get remote.origin.fetch > /dev/null
+    sudo -u $SUDO_USER git remote update > /dev/null
+    sudo -u $SUDO_USER git fetch > /dev/null
 
-    git checkout "${REPO_BRANCH}" > /dev/null
+    sudo -u $SUDO_USER git checkout "${REPO_BRANCH}" > /dev/null
     echo "Switched to branch '${REPO_BRANCH}'"
   fi
 }
@@ -86,8 +84,8 @@ EOF
 }
 
 installPackages() {
-  sudo pacman --noconfirm -Sy > /dev/null 2>&1
-  sudo pacman --noconfirm --needed -S git gum rsync figlet > /dev/null 2>&1
+  pacman --noconfirm -Sy > /dev/null 2>&1
+  pacman --noconfirm --needed -S git gum rsync figlet > /dev/null 2>&1
 }
 
 startInstallation() {
@@ -95,6 +93,12 @@ startInstallation() {
   cd "${REPO_DIR}"
   ./install/install.sh
 }
+
+set -e
+
+if [ "$EUID" -ne 0 ]; then
+  echo "Please use sudo when running this script"
+fi
 
 while getopts ":b:" option; do
   case $option in
@@ -108,3 +112,5 @@ while getopts ":b:" option; do
         ;;
   esac
 done
+
+executeScript
