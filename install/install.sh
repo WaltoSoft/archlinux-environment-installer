@@ -37,4 +37,4 @@ COLOR_AQUA=14
 COLOR_GREEN=10
 COLOR_RED=9
 
-source "${SCRIPTS_DIR}/main.sh"
+#source "${SCRIPTS_DIR}/main.sh"

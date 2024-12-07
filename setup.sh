@@ -21,7 +21,7 @@ cloneRepo() {
   fi
 
   echo "Cloning ${REPO_NAME} git repo."
-  sudo -u $SUDO_USER git clone -q --no-progress --depth 1 $RPEO_URL "${REPO_DIR}"
+  sudo -u $SUDO_USER git clone -q --no-progress --depth 1 $RPEO_URL "${REPO_DIR}" > /dev/null 2>&1
   echo "Clone complete."
   cd $REPO_DIR
 
