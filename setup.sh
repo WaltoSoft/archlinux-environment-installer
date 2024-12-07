@@ -26,13 +26,12 @@ cloneRepo() {
   cd $REPO_DIR
 
   if [ ! -z "${REPO_BRANCH}" ]; then
-    sudo -u $SUDO_USER git config --get remote.origin.fetch > /dev/null
-    sudo -u $SUDO_USER git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*" > /dev/null
-    sudo -u $SUDO_USER git config --get remote.origin.fetch > /dev/null
-    sudo -u $SUDO_USER git remote update > /dev/null
-    sudo -u $SUDO_USER git fetch > /dev/null
-
-    sudo -u $SUDO_USER git checkout "${REPO_BRANCH}" > /dev/null
+    sudo -u $SUDO_USER git config --get remote.origin.fetch > /dev/null 2>&1
+    sudo -u $SUDO_USER git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*" > /dev/null 2>&1
+    sudo -u $SUDO_USER git config --get remote.origin.fetch > /dev/null 2>&1
+    sudo -u $SUDO_USER git remote update > /dev/null 2>&1
+    sudo -u $SUDO_USER git fetch > /dev/null 2>&1
+    sudo -u $SUDO_USER git checkout "${REPO_BRANCH}" > /dev/null 2>&1
     echo "Switched to branch '${REPO_BRANCH}'"
   fi
 }
