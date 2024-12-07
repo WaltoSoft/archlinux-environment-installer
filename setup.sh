@@ -108,5 +108,3 @@ while getopts ":b:" option; do
         ;;
   esac
 done
-
-executeScript
