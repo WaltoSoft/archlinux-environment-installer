@@ -2,6 +2,8 @@ executeScript() {
   local pacmanPackages=( ${HYPRLAND_PACMAN_PACKAGES[*]} ${MY_PACMAN_PACKAGES[*]} )
   local yayPackages=( ${HYPRLAND_YAY_PACKAGES[*]} ${MY_YAY_PACKAGES[*]} )
 
+  clear
+  echo-text -fc $COLOR_AQUA "Packages"
   installPackages "${pacmanPackages[@]}"
   installYayPackages "${yayPackages[@]}"
 }
@@ -11,11 +13,13 @@ installPackages() {
   local packagesToInstall=();
 
   # Update the pacman databases
-  sudo pacman -Sy
+  sudo pacman -Sy 2>&1 | sudo tee -a $LOG_FILE > /dev/null
+  echo-text "Updated pacman databases"
 
   # Check to see which packages haven't already been installed
   for package; do
-    if [[ $(isPackageInstalled "${package}") == 0 ]]; then
+    if [ $(isPackageInstalled "${package}") -eq 0 ]; then
+      echo "Pacman package '${package}' is already installed" 2>&1 | sudo tee -a $LOG_FILE > /dev/null
       continue
     fi;
     
@@ -24,47 +28,41 @@ installPackages() {
 
   # Check to see if all of the packages have already been installed
   if [[ "${packagesToInstall[@]}" == "" ]] ; then
-    echo "All pacman packages are already installed."
-    return
-  fi;
-
-  # Installing those packages that haven't already been installed
-  echo "Installing packages that haven''t been installed yet"
-  sudo pacman --quiet --noconfirm -S "${packagesToInstall[@]}"
-  echo "pacman package installation complete."
+    echo-text "All pacman packages are already installed."
+  else
+    # Installing those packages that haven't already been installed
+    echo-text "Installing pacman packages: ${packagesToInstall[@]}."
+    gum spin --title "Installing pacman packages" --show-output -- sudo pacman -Sq --noconfirm "${packagesToInstall[@]}" 2>&1 | sudo tee -a $LOG_FILE
+    echo-text "pacman package installation complete."
+  fi
 }
 
-# Installs the Yay helper
 installYay() {
-  # check to see if yay is already installed
   if sudo pacman -Qs yay > /dev/null ; then
-    echo "yay is already installed!"
+    echo-text "yay is already installed!"
   else
-    echo "Building and Installing yay from source code"
+    echo-text "Building and Installing yay from source code"
 
-    # If the yay-git repo already exists it, then remove it
-    # so we are sure to get the latest version
     if [ -d ~/Git/yay-git ]; then
       rm -rf ~/Git/yay-git
-      echo "Existing yay-git repo removed"
+      echo-text "Existing yay-git repo removed"
     fi
 
-    # Clone the yay repo
     ensureFolder ~/Git
     cd ~/Git
-    echo "Cloning the yay git repository at https://aur.archlinux.org/yay-git"
-    git clone --quiet --no-progress --depth 1 https://aur.archlinux.org/yay-git.git
+    echo-text "Cloning the yay git repository at https://aur.archlinux.org/yay-git"
+    git clone --quiet --no-progress --depth 1 https://aur.archlinux.org/yay-git.git 2>&1 | sudo tee -a $LOG_FILE > /dev/null
     cd ~/Git/yay-git
 
     # Compiles the source code and then installs it via pacman
-    echo "Compiling yay source code and installing as a package"
-    makepkg -si
+    echo-text "Compiling yay source code and installing as a package"
+    gum spin --title "Compiling yay" --show-output -- makepkg -si 2>&1 | sudo tee -a $LOG_FILE > /dev/null
 
     # Check to see if yay is now installed via pacman
     if sudo pacman -Qs yay > /dev/null ; then
-      echo "yay has been installed successfully."
+      echo-text "yay has been installed successfully."
     else
-      echo "yay was not installed successfully."
+      echo-text "yay was not installed successfully."
     fi
   fi
 }
@@ -78,6 +76,7 @@ installYayPackages() {
   # Determining which packages need to be installed
   for package; do
     if [[ $(isPackageInstalled "${package}") == 0 ]]; then
+      echo "Yay package '${package}' is already installed" 2>&1 | sudo tee -a $LOG_FILE > /dev/null
       continue
     fi;
       
@@ -86,29 +85,26 @@ installYayPackages() {
 
   # Check to see if all of the packages have already been installed
   if [[ "${packagesToInstall[@]}" == "" ]] ; then
-    echo "All packages are already installed."
+    echo-text "All packages are already installed."
     return
   fi
 
   # Installing those packages which haven't already been installed
-  echo "Installing packages that haven''t been installed yet"
-  yay --quiet --noconfirm -S "${packagesToInstall[@]}"
-  echo "yay packages installation complete."
+  echo-text "Installing packages that haven''t been installed yet"
+  gum spin --title "Installing yay packages" --show-output -- yay --quiet --noconfirm -S "${packagesToInstall[@]}" 2>&1 | sudo tee -a $LOG_FILE > /dev/null
+  echo-text "yay packages installation complete."
 }
 
-# Checks to see if the package passed in has alredy been 
-# installed via pacman
 isPackageInstalled() {
   local package="$1"
-  local isInstalled="$(sudo pacman -Qs --color always "${package}" | grep "local" | grep "${package} ")"
+  local isInstalled="$(sudo pacman -Qqs "${package}" | grep -Fx --color=never "${package}")"
 
   if [ -n "${isInstalled}" ] ; then
-    echo 0 
-    return  #package was found
+    echo 0  #package was found
+    return 0
   fi
   
   echo 1 #package was not found
-  return  
 }
 
 executeScript

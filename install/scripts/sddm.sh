@@ -5,7 +5,9 @@ executeScript() {
   local iniUpdateScript=$SCRIPTS_DIR/iniupdate.py
   local themeDirectory=/usr/share/sddm/themes
 
-  ensureFolder $sddmConfigFolder True
+  clear
+  echo-text -fc $COLOR_AQUA "sddm"
+  ensureFolder -s $sddmConfigFolder 
   copyDefaultConfiguration
   configureThemes
   selectTheme
@@ -14,7 +16,7 @@ executeScript() {
 
 copyDefaultConfiguration() {
   sudo cp $defaultConfigFile $sddmConfigFile
-  echo "Default SDDM Configuration copied"
+  echo-text "Default SDDM Configuration copied"
 }
 
 getInstalledThemes() {
@@ -32,15 +34,15 @@ getInstalledThemes() {
 
 selectTheme() {
   local themeOptions=($(getInstalledThemes))
-  local selectedTheme=$(gum choose "${themeOptions[@]}")
+  local selectedTheme=$(askUser -m "${themeOptions[@]}")
 
-  echo "Selected Theme: ${selectedTheme}"
+  echo-text "Selected Theme: ${selectedTheme}"
   sudo python $iniUpdateScript $sddmConfigFile Theme Current $selectedTheme
 }
 
 enableSDDM () {
-  sudo systemctl enable sddm.service
-  echo "SDDM Enabled"
+  sudo systemctl enable sddm.service 2>&1 | sudo tee -a $LOG_FILE > /dev/null
+  echo-text "SDDM Enabled"
 }
 
 configureThemes() {
