@@ -48,11 +48,11 @@ askUser() {
 }
 
 echo_text() {
+  local OPTIND=1
   local useFiglet=false
   local color
   local message
   local messageSet=false
-  local OPTIND=1
   local errorExit=false
 
   while getopts ":c:f" option; do
@@ -105,6 +105,10 @@ echo_text() {
     fi
   
     echo "${message}" >> $LOG_FILE 2>&1
+
+    if $errorExit ; then
+      exit 1
+    fi
   fi
 }
 
