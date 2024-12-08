@@ -12,7 +12,6 @@ executeScript() {
 }
 
 cloneRepo() {
-  echo "Got Here"
   if [ ! -d "${GIT_DIR}" ]; then
     sudo -u $SUDO_USER mkdir -p "${GIT_DIR}"
   fi
