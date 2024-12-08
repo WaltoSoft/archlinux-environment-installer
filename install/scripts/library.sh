@@ -7,7 +7,7 @@ askUser() {
       c)  if [ -z $command ]; then
             command="confirm"
           else
-            echo_text -c $COLOR_RED "ERROR: You can only speciy -c or -m, not both"
+            echoText -c $COLOR_RED "ERROR: You can only speciy -c or -m, not both"
             exit 1
           fi
           ;;
@@ -15,12 +15,12 @@ askUser() {
       m)  if [ -z $command ]; then
             command="choose"
           else
-            echo_text -c $COLOR_RED "ERROR: You can only speciy -c or -m, not both"
+            echoText -c $COLOR_RED "ERROR: You can only speciy -c or -m, not both"
             exit 1
           fi
           ;;
 
-     \?)  echo_text -c $COLOR_RED "ERROR: Invalid option passed to askUser: -${OPTARG}"
+     \?)  echoText -c $COLOR_RED "ERROR: Invalid option passed to askUser: -${OPTARG}"
           exit 1
           ;;
     esac
@@ -47,7 +47,7 @@ askUser() {
   esac
 }
 
-echo_text() {
+echoText() {
   local OPTIND=1
   local useFiglet=false
   local color
@@ -120,7 +120,7 @@ ensureFolder() {
     useSudoUser=true
   fi
 
-  echo_text "Ensuring folder '${folderPath}' exists"
+  echoText "Ensuring folder '${folderPath}' exists"
    
   if [ ! -d $folderPath ] ;then
     if $useSudoUser; then
@@ -129,6 +129,6 @@ ensureFolder() {
       mkdir $folderPath
     fi
 
-    echo_text "Folder '${folderPath}' created"
+    echoText "Folder '${folderPath}' created"
   fi
 }
