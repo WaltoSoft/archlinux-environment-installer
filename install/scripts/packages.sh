@@ -3,7 +3,7 @@ executeScript() {
   local yayPackages=( ${HYPRLAND_YAY_PACKAGES[*]} ${MY_YAY_PACKAGES[*]} )
 
   clear
-  echo-text -fc $COLOR_AQUA "Packages"
+  echo_text -fc $COLOR_AQUA "Packages"
   installPackages "${pacmanPackages[@]}"
   installYayPackages "${yayPackages[@]}"
 }
@@ -14,12 +14,12 @@ installPackages() {
 
   # Update the pacman databases
   sudo pacman -Sy 2>&1 | sudo tee -a $LOG_FILE > /dev/null
-  echo-text "Updated pacman databases"
+  echo_text "Updated pacman databases"
 
   # Check to see which packages haven't already been installed
   for package; do
     if [ $(isPackageInstalled "${package}") -eq 0 ]; then
-      echo-text "Pacman package '${package}' is already installed"
+      echo_text "Pacman package '${package}' is already installed"
       continue
     fi;
     
@@ -28,41 +28,41 @@ installPackages() {
 
   # Check to see if all of the packages have already been installed
   if [[ "${packagesToInstall[@]}" == "" ]] ; then
-    echo-text "All pacman packages are already installed."
+    echo_text "All pacman packages are already installed."
   else
     # Installing those packages that haven't already been installed
-    echo-text "Installing pacman packages: ${packagesToInstall[*]}."
+    echo_text "Installing pacman packages: ${packagesToInstall[*]}."
     sudo pacman -Sq --noconfirm "${packagesToInstall[@]}" 2>&1 | sudo tee -a $LOG_FILE
-    echo-text "pacman package installation complete."
+    echo_text "pacman package installation complete."
   fi
 }
 
 installYay() {
   if sudo pacman -Qs yay > /dev/null ; then
-    echo-text "yay is already installed!"
+    echo_text "yay is already installed!"
   else
-    echo-text "Building and Installing yay from source code"
+    echo_text "Building and Installing yay from source code"
 
     if [ -d ~/Git/yay-git ]; then
       rm -rf ~/Git/yay-git
-      echo-text "Existing yay-git repo removed"
+      echo_text "Existing yay-git repo removed"
     fi
 
     ensureFolder ~/Git
     cd ~/Git
-    echo-text "Cloning the yay git repository at https://aur.archlinux.org/yay-git"
+    echo_text "Cloning the yay git repository at https://aur.archlinux.org/yay-git"
     git clone --quiet --no-progress --depth 1 https://aur.archlinux.org/yay-git.git 2>&1 | sudo tee -a $LOG_FILE > /dev/null
     cd ~/Git/yay-git
 
     # Compiles the source code and then installs it via pacman
-    echo-text "Compiling yay source code and installing as a package"
+    echo_text "Compiling yay source code and installing as a package"
     makepkg -si 2>&1 | sudo tee -a $LOG_FILE > /dev/null
 
     # Check to see if yay is now installed via pacman
     if sudo pacman -Qs yay > /dev/null ; then
-      echo-text "yay has been installed successfully."
+      echo_text "yay has been installed successfully."
     else
-      echo-text "yay was not installed successfully."
+      echo_text "yay was not installed successfully."
     fi
   fi
 }
@@ -85,14 +85,14 @@ installYayPackages() {
 
   # Check to see if all of the packages have already been installed
   if [[ "${packagesToInstall[@]}" == "" ]] ; then
-    echo-text "All packages are already installed."
+    echo_text "All packages are already installed."
     return
   fi
 
   # Installing those packages which haven't already been installed
-  echo-text "Installing packages that haven''t been installed yet"
+  echo_text "Installing packages that haven''t been installed yet"
   yay --quiet --noconfirm -S "${packagesToInstall[@]}" 2>&1 | sudo tee -a $LOG_FILE > /dev/null
-  echo-text "yay packages installation complete."
+  echo_text "yay packages installation complete."
 }
 
 isPackageInstalled() {

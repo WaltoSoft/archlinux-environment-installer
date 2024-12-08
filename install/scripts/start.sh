@@ -5,17 +5,17 @@ executeScript() {
 }
 
 confirmStart() {
-  echo-text -fc $COLOR_AQUA "Installation"
-  echo-text "This script will setup Hyprland"
-  echo-text
+  echo_text -fc $COLOR_AQUA "Installation"
+  echo_text "This script will setup Hyprland"
+  echo_text
 
   if askUser -c "DO YOU WANT TO START THE INSTALLATION?"; then
-    echo-text -c $COLOR_GREEN "Installation Starting"
+    echo_text -c $COLOR_GREEN "Installation Starting"
   elif [ $? -eq 130 ] ; then
-    echo-text -c $COLOR_RED "Installation Cancelled"
+    echo_text -c $COLOR_RED "Installation Cancelled"
     exit 130
   else
-    echo-text -c $COLOR_RED "Installation Cancelled"
+    echo_text -c $COLOR_RED "Installation Cancelled"
     exit
   fi
 }
