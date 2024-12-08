@@ -113,31 +113,22 @@ echo_text() {
 }
 
 ensureFolder() {
-  local folderPath
-  local useSudo=False
+  local folderPath=$1
+  local useSudoUser=false
+  
+  if [[ $folderPath == "/home/$SUDO_USER/"* ]]; then
+    useSudoUser=true
+  fi
 
-  while getopts ":s" option; do
-    case $option in
-      s)  useSudo=True
-          ;;
-      :)  echo_text -c $COLOR_RED "Option -${OPTARG} requires an argument."
-          exit 1;;
-      ?)  echo_text -c $COLOR_RED "Invalid option: -${OPTARG}." 
-          exit 1
-          ;;
-    esac
-  done  
-
-  shift $((OPTIND-1))
-  folderPath="$1"
-
-  echo_text "Ensuring folder ${folderPath} exists"
-
+  echo_text "Ensuring folder '${folderPath}' exists"
+   
   if [ ! -d $folderPath ] ;then
-    if [ $useSudo = True ]; then
-      sudo mkdir $folderPath
+    if $useSudoUser; then
+      sudo -u $SUDO_USER mkdir $folderPath
     else
       mkdir $folderPath
     fi
+
+    echo_text "Folder '${folderPath}' created"
   fi
 }
