@@ -6,10 +6,9 @@ executeScript() {
 
 confirmStart() {
   echoText -fc $COLOR_AQUA "Installation"
-  echoText "This script will setup Hyprland"
   echoText
 
-  if askUser -c "DO YOU WANT TO START THE INSTALLATION?"; then
+  if $(askUser -c "DO YOU WANT TO START THE INSTALLATION?"); then
     echoText -c $COLOR_GREEN "Installation Starting"
   elif [ $? -eq 130 ] ; then
     echoText -c $COLOR_RED "Installation Cancelled"
