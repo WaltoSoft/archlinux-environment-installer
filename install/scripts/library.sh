@@ -7,18 +7,21 @@ askUser() {
       c)  if [ -z $command ]; then
             command="confirm"
           else
-            echo_text -c $COLOR_RED "You can only speciy -c or -m, not both"
+            echo_text -c $COLOR_RED "ERROR: You can only speciy -c or -m, not both"
             exit 1
           fi
           ;;
+
       m)  if [ -z $command ]; then
             command="choose"
           else
-            echo_text -c $COLOR_RED "You can only speciy -c or -m, not both"
+            echo_text -c $COLOR_RED "ERROR: You can only speciy -c or -m, not both"
             exit 1
           fi
           ;;
-     \?)  echo_text -c $COLOR_RED "Invalid option passed to askUser: -${OPTARG}"
+
+     \?)  echo_text -c $COLOR_RED "ERROR: Invalid option passed to askUser: -${OPTARG}"
+          exit 1
           ;;
     esac
   done
@@ -26,23 +29,20 @@ askUser() {
   shift $((OPTIND-1))
 
   case $command in
-    "confirm")  echo "Confirm Prompt: '$@'" | sudo tee -a $LOG_FILE > /dev/null
-                gum confirm "$@"
-                local result="$?"
-                if [ $result -eq 0 ]; then
-                  echo "User Chose: Yes" | sudo tee -a $LOG_FILE > /dev/null
+    "confirm")  echo "Confirm Prompt: '$@'" >> $LOG_FILE
+                if gum confirm "$@"; then
+                  echo "User Chose: Yes" >> $LOG_FILE
+                  echo true
                 else
-                  echo "User Chose: No" | sudo tee -a $LOG_FILE > /dev/null
+                  echo "User Chose: No" >> $LOG_FILE
+                  echo false
                 fi
-                
-                return $result
                 ;;
 
-    "choose")   echo "Choose Prompt: '$@'" | sudo tee -a $LOG_FILE > /dev/null
+    "choose")   echo "Choose Prompt: '$@'" >> $LOG_FILE
                 local result=$(gum choose "$@")
-                echo "User Chose: ${result}" | sudo tee -a $LOG_FILE > /dev/null
+                echo "User Chose: ${result}" >> $LOG_FILE
                 echo $result
-                return 0
                 ;;
   esac
 }
@@ -63,14 +63,14 @@ echo_text() {
           ;;
       :)  color=$COLOR_RED
           useFiglet=false
-          message="Option -${OPTARG} requires an argument."
+          message="ERROR: Option -${OPTARG} requires an argument."
           messageSet=true
           errorExit=true
           break
           ;;
      \?)  color=$COLOR_RED
           useFiglet=false
-          message="Invalid option: -${OPTARG}." 
+          message="ERROR: Invalid option: -${OPTARG}." 
           messageSet=true
           errorExit=true
           break
