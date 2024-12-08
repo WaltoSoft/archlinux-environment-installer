@@ -1,9 +1,15 @@
 set -e
 
-REPO_DIR=$HOME/Git/archlinux-environment-installer
+if [ "$EUID" -ne 0 ]; then
+  echo "Please use sudo when running this script"
+  exit 1
+fi
+
+REPO_NAME=archlinux-environment-installer
+REPO_DIR=/home/$SUDO_USER/Git/$REPO_NAME
 INSTALL_DIR=$REPO_DIR/install
 SCRIPTS_DIR=$INSTALL_DIR/scripts
-LOGS_DIR=/var/log/archlinux-environment-installer
+LOGS_DIR=/var/log/$REPO_NAME
 LOG_FILE="${LOGS_DIR}/$(date '+%Y%m%d%H%M%S').log"
 
 HYPRLAND_PACMAN_PACKAGES=(
