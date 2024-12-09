@@ -32,7 +32,8 @@ installWithPacman() {
 
 isInstalledWithPacman() {
   local package="$1"
-  local isInstalled="$(pacman -Qqs "${package}" | grep -Fx --color=never "${package}")"
+  #local isInstalled="$(pacman -Qqs "${package}" | grep -Fx --color=never "${package}")"
+  local isInstalled="$(pacman -Qq "${package}")"
 
   if [ -n "${isInstalled}" ] ; then
     echo true
