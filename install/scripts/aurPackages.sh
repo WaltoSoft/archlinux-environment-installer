@@ -21,9 +21,11 @@ installAurPackages() {
   if [ "${#packagesToInstall[@]}" -le 0 ] ; then
     echoText -c $COLOR_GREEN "All Aur packages are already installed via pacman"
   else
-    echoText "Installing Aur packages: ${packagesToInstall[*]}"
+    echoText "The following Aur packages need to be installed: ${packagesToInstall[*]}"
 
     for packageToInstall in "${packagesToInstall[@]}"; do
+      echoText "Installing Aur package ${packageToInstall}"
+      
       compileAurPackage $packageToInstall
       installAurPackageFile $packageToInstall
 
