@@ -1,6 +1,5 @@
 executeScript() {
   clear
-  sudo mkdir -p $LOGS_DIR
   confirmStart
 }
 

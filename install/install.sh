@@ -48,6 +48,7 @@ executeScript() {
   fi
 
   source "${SCRIPTS_DIR}/library.sh"
+  mkdir -p $LOGS_DIR
 
   doit() {
     local NO_PASSWORD_LINE="%wheel ALL=(ALL:ALL) NOPASSWD: ALL"
