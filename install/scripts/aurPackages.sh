@@ -6,6 +6,37 @@ executeScript() {
   installAurPackages "${aurPackages[@]}"
 }
 
+buildAndInstallPackage() {
+  existsOrExit $1 "No package name provided to installAurPackage"
+
+  local packageName=$1
+  local packageAurFolder="${AURFOLDER}/${packageName}"
+  local packageUrl="https://aur.archlinux.org/${packageName}.git"
+  
+  if $(isInstalledWithPacman $packageName) ; then
+    echoText "${$packageName} is already installed!"
+  else
+    removeExistingFolder $packageAurFolder
+    cloneRepo $packageUrl $packageAurFolder "${packageAurFolder}/PKGBUILD"
+    echoText "Compiling the ${packageName} package"
+
+    doit() {
+      sudo -u $SUDO_USER makepkg -si >> $LOG_FILE 2> >(tee -a $LOG_FILE >&2)
+    }
+
+    if ! doit ; then
+      echoText -c $COLOR_RED "ERROR: Aur package '${packageName}' could not be compiled"
+    fi
+
+    if $(isInstalledWithPacman $packageName) ; then
+      echoText -c $COLOR_GREEN "Package '${packageName}' installed successfully"
+    else
+      echoText -c $COLOR_RED "ERROR: Package '${packageName}' failed to install"
+      exit 1
+    fi
+  fi
+}
+
 installAurPackages() {
   local packagesToInstall=()
 
@@ -41,89 +72,17 @@ installAurPackages() {
   fi
 }
 
-compileAurPackage() {
-  existsOrExit $1 "No package name provided to installAurPackage"
-
-  local packageName=$1
-  local packageAurFolder="${AURFOLDER}/${packageName}"
-  local packageUrl="https://aur.archlinux.org/${packageName}.git"
-  
-  if $(isInstalledWithPacman $packageName) ; then
-    echoText "${$packageName} is already installed!"
+installYay() {
+  if $(isInstalledWithPacman 'yay-git') ; then
+    echoText "yay is already installed!"
   else
-    removeExistingFolder $packageAurFolder
-    cloneRepo $packageUrl $packageAurFolder "${packageAurFolder}/PKGBUILD"
-    installAurDependencies $packageName
-
-    echoText "Compiling the ${packageName} package"
-
-    doit() {
-      sudo -u $SUDO_USER makepkg >> $LOG_FILE 2> >(tee -a $LOG_FILE >&2)
-    }
-
-    if ! doit ; then
-      echoText -c $COLOR_RED "ERROR: Aur package '${packageName}' could not be compiled"
-    fi
+    buildAndInstallPackage 'yay-git'
   fi
 }
 
-installAurDependencies() {
-  existsOrExit $1 "No package name provided to installAurDependencies"
+installWithYay() {
 
-  local dependencies
-  local packageName=$1
-  local packageFolder="${AURFOLDER}/${packageName}"
 
-  if [ ! -d $packageFolder ]; then
-    echoText -c $COLOR_RED "ERROR: ${packageName} folder does not exist"
-    exit 1
-  fi
-
-  cd $packageFolder
-  echoText "Getting dependencies for ${packageName}"
-  dependencies=($(sudo -u $SUDO_USER makepkg --printsrcinfo | grep -E 'depends|makedepends|checkdepends' | awk '{print $3}'))
-
-  if [ "${#dependencies[@]}" -le 0 ]; then
-    echoText "${packageName} has no dependencies"
-  else
-    echoText "${packageName} has the following dependencies: ${dependencies[*]}"
-    installWithPacman "${dependencies[@]}"
-  fi
-}
-
-installAurPackageFile() {
-  existsOrExit $1 "No package name provided to installAurPackageFile"  
-  
-  local packageName=$1
-  local packageAurFolder="${AURFOLDER}/${packageName}"
-  local packageFiles=($(find $packageAurFolder -type f -name "${packageName}*" ! -exec basename {} \;))
-  local packageToInstall
-
-  if [ "${#packageFiles[@]}" -le 0 ]; then
-    echoText -c $COLOR_RED "ERROR: No package files found for ${packageName}"
-    exit 1
-  fi
- 
-  if [ "${#packageFiles[@]}" -eq 1 ]; then
-    packageToInstall=${packageFiles[0]}
-  else
-    packageToInstall=$(askUser -m "Choose which package to install for ${packageName}:" "${packageFiles[@]}") 
-  fi
-
-  if [ -z $packageToInstall ]; then
-    echoText -c $COLOR_RED "ERROR: No package file was selected for ${packageName}"
-    exit 1
-  fi
-
-  echoText "Installing package file '${packageToInstall}' with pacman"
-  pacmanFromFile ${packageAurFolder}/${packageToInstall}
-
-  if $(isInstalledWithPacman $packageName) ; then
-    echoText "${packageName} has been installed successfully."
-  else
-    echoText -c $COLOR_RED "ERROR: ${packageName} was not installed successfully."
-    exit 1
-  fi
 }
 
 executeScript
