@@ -10,24 +10,24 @@ executeScript() {
 }
 
 installWithPacman() {
-  local packagesToInstall=();
-
   for package; do
     if $(isInstalledWithPacman ${package}) ; then
       echoText "pacman package '${package}' is already installed"
       continue
     fi;
-    
-    packagesToInstall+=("${package}")
-  done;
 
-  if [[ "${packagesToInstall[@]}" == "" ]] ; then
-    echoText -c $COLOR_GREEN "All pacman packages are already installed."
-  else
-    echoText "Installing pacman packages: ${packagesToInstall[*]}."
-    pacmanFromPackage "${packagesToInstall[@]}"
-    echoText -c $COLOR_GREEN "Pacman packages successfully installed."
-  fi
+    echoText "Installing pacman package '${package}'"
+    pacmanFromPackage $package
+
+    if $(isInstalledWithPacman ${package}); then
+      echoText "pacman package ${package} was successfully installed"
+    else
+      echoText -c $COLOR_RED "ERROR: pacman package ${package} failed to install"
+      exit 1
+    fi
+  done;
+  
+  echoText -c $COLOR_GREEN "Pacman packages successfully installed."
 }
 
 isInstalledWithPacman() {
