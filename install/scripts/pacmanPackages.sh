@@ -16,6 +16,7 @@ installPackagesWithPacman() {
     else
       packagesToInstall+=("${package}")      
     fi;
+  done;
 
   if [ "${#packagesToInstall[@]}" -eq 0 ] ; then
     echo -c $COLOR_GREEN "All pacman packages are already installed."
@@ -31,9 +32,7 @@ installPackagesWithPacman() {
     else
       echoText -c $COLOR_GREEN "All pacman packages installed successfuly"
     fi
-  done;
-  
-  echoText -c $COLOR_GREEN "Pacman packages successfully installed."
+  fi
 }
 
 isInstalledWithPacman() {
