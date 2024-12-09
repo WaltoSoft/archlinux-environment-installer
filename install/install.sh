@@ -54,7 +54,7 @@ executeScript() {
     local NO_PASSWORD_LINE="%wheel ALL=(ALL:ALL) NOPASSWD: ALL"
     local SUDOERS_FILE="/etc/sudoers"
 
-    grep -qxF "${NO_PASSWORD_LINE}" "$FILE" || echo "${NO_PASSWORD_LINE}" >> "$FILE"
+    grep -qxF "${NO_PASSWORD_LINE}" "$SUDOERS_FILE" || echo "${NO_PASSWORD_LINE}" >> "$SUDOERS_FILE"
   }
 
   if ! doit ; then
