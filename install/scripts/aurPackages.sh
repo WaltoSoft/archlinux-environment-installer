@@ -6,37 +6,6 @@ executeScript() {
   installPackagesWithYay "${aurPackages[@]}"
 }
 
-buildAndInstallPackage() {
-  existsOrExit $1 "No package name provided to installAurPackage"
-
-  local packageName=$1
-  local packageAurFolder="${AURFOLDER}/${packageName}"
-  local packageUrl="https://aur.archlinux.org/${packageName}.git"
-  
-  if $(isInstalledWithPacman $packageName) ; then
-    echoText "${$packageName} is already installed!"
-  else
-    removeExistingFolder $packageAurFolder
-    cloneRepo $packageUrl $packageAurFolder "${packageAurFolder}/PKGBUILD"
-    echoText "Compiling the ${packageName} package"
-
-    doit() {
-      sudo -u $SUDO_USER makepkg -si >> $LOG_FILE 2> >(tee -a $LOG_FILE >&2)
-    }
-
-    if ! doit ; then
-      echoText -c $COLOR_RED "ERROR: Aur package '${packageName}' could not be compiled"
-    fi
-
-    if $(isInstalledWithPacman $packageName) ; then
-      echoText -c $COLOR_GREEN "Package '${packageName}' installed successfully"
-    else
-      echoText -c $COLOR_RED "ERROR: Package '${packageName}' failed to install"
-      exit 1
-    fi
-  fi
-}
-
 installPackagesWithYay() {
   local packagesToInstall=()
 
@@ -76,7 +45,7 @@ installYay() {
    
     doit() {
       echoText "Compiling the 'yay-git' package"
-      sudo -u $SUDO_USER makepkg -si >> $LOG_FILE 2> >(tee -a $LOG_FILE >&2)
+      sudo -u $SUDO_USER makepkg -si --noconfirm >> $LOG_FILE 2> >(tee -a $LOG_FILE >&2)
     }
 
     if ! doit ; then

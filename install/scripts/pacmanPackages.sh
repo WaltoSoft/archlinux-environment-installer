@@ -21,10 +21,11 @@ installPackagesWithPacman() {
   if [ "${#packagesToInstall[@]}" -eq 0 ] ; then
     echo -c $COLOR_GREEN "All pacman packages are already installed."
   else
-    echoText "Installing pacman packages (this may take a while!): ${packagesToInstall[*]}"
+    echoText "Installing pacman packages: ${packagesToInstall[*]}"
+    echoText "This may take a while..."
 
     doit() {
-      pacman -S --noconfirm $packageName >> $LOG_FILE 2> >(tee -a $LOG_FILE >&2)    
+      pacman -S --noconfirm $packagesToInstall >> $LOG_FILE 2> >(tee -a $LOG_FILE >&2)    
     }
 
     if ! doit ; then
