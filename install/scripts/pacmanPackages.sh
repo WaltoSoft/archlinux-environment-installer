@@ -2,14 +2,15 @@ executeScript() {
   local pacmanPackages=( ${HYPRLAND_PACMAN_PACKAGES[*]} ${MY_PACMAN_PACKAGES[*]} )
 
   echoText -fc $COLOR_AQUA "Pacman Packages"
+
+  pacman -Sy >> $LOG_FILE 2> >(tee -a $LOG_FILE >&2)
+  echoText "Updated pacman databases"
+  
   installWithPacman "${pacmanPackages[@]}"
 }
 
 installWithPacman() {
   local packagesToInstall=();
-
-  pacman -Sy >> $LOG_FILE
-  echoText "Updated pacman databases"
 
   for package; do
     if $(isInstalledWithPacman ${package}) ; then
