@@ -1,4 +1,3 @@
-source $SCRIPTS_DIR/library.sh
 source $SCRIPTS_DIR/start.sh
 source $SCRIPTS_DIR/pacmanPackages.sh
 source $SCRIPTS_DIR/aurPackages.sh

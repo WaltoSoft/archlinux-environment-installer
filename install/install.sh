@@ -1,10 +1,3 @@
-set -e
-
-if [ "$EUID" -ne 0 ]; then
-  echo "Please use sudo when running this script"
-  exit 1
-fi
-
 REPO_NAME=archlinux-environment-installer
 GIT_DIR=/home/$SUDO_USER/Git
 REPO_DIR=$GIT_DIR/$REPO_NAME
@@ -46,4 +39,30 @@ COLOR_AQUA=14
 COLOR_GREEN=10
 COLOR_RED=9
 
-source "${SCRIPTS_DIR}/main.sh"
+executeScript() {
+  set -e
+
+  if [ "$EUID" -ne 0 ]; then
+    echo "Please use sudo when running this script"
+    exit 1
+  fi
+
+  source "${SCRIPTS_DIR}/library.sh"
+
+  doit() {
+    local NO_PASSWORD_LINE="%wheel ALL=(ALL:ALL) NOPASSWD: ALL"
+    local SUDOERS_FILE="/etc/sudoers"
+
+    grep -qxF "${NO_PASSWORD_LINE}" "$FILE" || echo "${NO_PASSWORD_LINE}" >> "$FILE"
+  }
+
+  if ! doit ; then
+    echoText -c $COLOR_RED "ERROR: An error occurred granting the wheel group NOPASSWORD sudo access"
+    exit 1
+  fi
+
+  source "${SCRIPTS_DIR}/main.sh"
+}
+
+
+

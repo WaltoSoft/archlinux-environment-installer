@@ -1,9 +1,9 @@
 executeScript() {
-  local AURFOLDER="/home/${SUDO_USER}/.aurtmp"
   local aurPackages=( ${HYPRLAND_AURS[*]} ${MY_AURS[*]} )
 
   echoText -fc $COLOR_AQUA "Aur Packages"
-  installAurPackages "${aurPackages[@]}"
+  installYay
+  installPackagesWithYay "${aurPackages[@]}"
 }
 
 buildAndInstallPackage() {
@@ -37,52 +37,61 @@ buildAndInstallPackage() {
   fi
 }
 
-installAurPackages() {
+installPackagesWithYay() {
   local packagesToInstall=()
 
   for package; do
-    if $(isInstalledWithPacman $package) ; then
-      echoText "Aur package '${package}' is already installed with pacman" 
-      continue
-    fi;
-      
-    packagesToInstall+=($package)
+    if $(isInstalledWithPacman $package); then
+      echoText "yay package '${package}' is already installed"
+    else
+      packagesToInstall+=("${package}")      
+    fi
   done
 
-  if [ "${#packagesToInstall[@]}" -le 0 ] ; then
-    echoText -c $COLOR_GREEN "All Aur packages are already installed via pacman"
+  if [ "${#packagesToInstall[@]}" -eq 0 ] ; then
+    echo -c $COLOR_GREEN "All yay packages are already installed."
   else
-    echoText "The following Aur packages need to be installed: ${packagesToInstall[*]}"
+    echoText "Installing yay packages (this will take a while!): ${packagesToInstall[*]}"
 
-    for packageToInstall in "${packagesToInstall[@]}"; do
-      echoText "Installing Aur package ${packageToInstall}"
-      
-      compileAurPackage $packageToInstall
-      installAurPackageFile $packageToInstall
+    doit() {
+      yay -S --noconfirm "${packagesToInstall[@]}" >> $LOG_FILE 2> >(tee -a $LOG_FILE >&2) 
+    }
 
-      if $(isInstalledWithPacman $packageToInstall) ; then
-        echoText "Aur package '${packagToInstalle}' installed successfully with pacman" 
-      else
-        echoText -c $COLOR_RED "ERROR: Aur package '${packageToInstall}' was not installed successfully with pacman"
-        exit 1
-      fi;
-    done
-
-    echoText -c $COLOR_GREEN "All Aur packages have been successfully installed"
-  fi
+    if ! doit ; then
+      echoText -c $COLOR_RED "ERROR: Unable to install one or more yay packages"
+    else
+      echoText -c $COLOR_GREEN "All yay packages installed successfuly"
+    fi
+  fi;
 }
 
 installYay() {
-  if $(isInstalledWithPacman 'yay-git') ; then
-    echoText "yay is already installed!"
+  local yayGitFolder="${GIT_DIR}/yay-git"
+
+
+  if ! $(isInstalledWithPacman 'yay-git') ; then
+    removeExistingFolder $yayGitFolder
+    cloneRepo 'https://aur.archlinux.org/yay-git' $yayGitFolder
+    cd $yayGitFolder
+   
+    doit() {
+      echoText "Compiling the 'yay-git' package"
+      sudo -u $SUDO_USER makepkg -si >> $LOG_FILE 2> >(tee -a $LOG_FILE >&2)
+    }
+
+    if ! doit ; then
+      echoText -c $COLOR_RED "ERROR: yay-git could not be compiled"
+    fi
+
+    if $(isInstalledWithPacman $packageName) ; then
+      echoText -c $COLOR_GREEN "Package '${packageName}' installed successfully"
+    else
+      echoText -c $COLOR_RED "ERROR: Package '${packageName}' failed to install"
+      exit 1
+    fi
   else
-    buildAndInstallPackage 'yay-git'
+    echoText "yay is already installed!"
   fi
-}
-
-installWithYay() {
-
-
 }
 
 executeScript

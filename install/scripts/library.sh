@@ -93,7 +93,6 @@ cloneRepo() {
 
   if [ -d $repoFolder ]; then
     echoText "'${repoUrl}' repo cloned successfully"
-    cd $repoFolder
   else
     echoText -c $COLOR_RED "ERROR: '${repoUrl}' was not successfully cloned"
     exit 1
