@@ -25,7 +25,7 @@ installPackagesWithPacman() {
     echoText "This may take a while..."
 
     doit() {
-      pacman -S --noconfirm $packagesToInstall >> $LOG_FILE 2> >(tee -a $LOG_FILE >&2)    
+      pacman -S --noconfirm "${packagesToInstall[@]}" >> $LOG_FILE 2> >(tee -a $LOG_FILE >&2)    
     }
 
     if ! doit ; then
@@ -38,7 +38,7 @@ installPackagesWithPacman() {
 
 isInstalledWithPacman() {
   local package="$1"
-  local isInstalled="$(pacman -Qq "${package}" 2> >(tee -a $LOG_FILE >&2))"
+  local isInstalled="$(pacman -Qq "${package}" 2>  $LOG_FILE)"
 
   if [ -n "${isInstalled}" ] ; then
     echo true

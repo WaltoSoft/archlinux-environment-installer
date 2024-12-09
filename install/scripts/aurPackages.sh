@@ -23,7 +23,7 @@ installPackagesWithYay() {
     echoText "Installing yay packages (this will take a while!): ${packagesToInstall[*]}"
 
     doit() {
-      sudo -u $SUDO_USER yay -S --noconfirm "${packagesToInstall[@]}" >> $LOG_FILE 2> >(tee -a $LOG_FILE >&2) 
+      sudo -u $SUDO_USER yay -S --noconfirm "${packagesToInstall[@]}" >> $LOG_FILE 2>&1 
     }
 
     if ! doit ; then
