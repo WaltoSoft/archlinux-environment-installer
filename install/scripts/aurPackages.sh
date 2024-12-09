@@ -56,7 +56,14 @@ compileAurPackage() {
     installAurDependencies $packageName
 
     echoText "Compiling the ${packageName} package"
-    sudo -u $SUDO_USER makepkg >> $LOG_FILE 2>&1
+
+    doit() {
+      sudo -u $SUDO_USER makepkg >> $LOG_FILE 2> >(tee -a $LOG_FILE >&2)
+    }
+
+    if ! doit ; then
+      echoText -c $COLOR_RED "ERROR: Aur package '${packageName}' could not be compiled"
+    fi
   fi
 }
 
