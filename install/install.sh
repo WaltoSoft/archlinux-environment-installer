@@ -64,5 +64,4 @@ executeScript() {
   source "${SCRIPTS_DIR}/main.sh"
 }
 
-
-
+executeScript
