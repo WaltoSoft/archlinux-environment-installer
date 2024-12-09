@@ -1,9 +1,8 @@
 executeScript() {
-  clear
   echoText -fc $COLOR_AQUA "Reboot"
   echoText "A reboot of your system is recommended."
   echoText
-  if [ $(askUser -c "Would you like to reboot now?") -eq 0 ] ; then
+  if $(askUser -c "Would you like to reboot now?") ; then
     echoText "Rebooting..."
     systemctl reboot
   elif [ $? -eq 130 ]; then

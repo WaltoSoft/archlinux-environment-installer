@@ -5,9 +5,8 @@ executeScript() {
   local iniUpdateScript=$SCRIPTS_DIR/iniupdate.py
   local themeDirectory=/usr/share/sddm/themes
 
-  clear
   echoText -fc $COLOR_AQUA "sddm"
-  ensureFolder -s $sddmConfigFolder 
+  ensureFolder $sddmConfigFolder 
   copyDefaultConfiguration
   configureThemes
   selectTheme

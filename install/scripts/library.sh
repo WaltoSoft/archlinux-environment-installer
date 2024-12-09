@@ -1,11 +1,16 @@
+AURFOLDER="/home/${SUDO_USER}/.aurtmp"
+
 askUser() {
   local OPTIND=1
   local command
+  local choices
+  local prompt
 
-  while getopts ":cm" option; do
+  while getopts ":c:m:" option; do
     case $option in
       c)  if [ -z $command ]; then
             command="confirm"
+            prompt="${OPTARG}"
           else
             echoText -c $COLOR_RED "ERROR: You can only speciy -c or -m, not both"
             exit 1
@@ -14,10 +19,15 @@ askUser() {
 
       m)  if [ -z $command ]; then
             command="choose"
+            prompt="${OPTARG}"
           else
             echoText -c $COLOR_RED "ERROR: You can only speciy -c or -m, not both"
             exit 1
           fi
+          ;;
+
+      :)  echoText -c $COLOR_RED "ERROR: Option -${OPTARG} requires a prompt argument."
+          exit 1
           ;;
 
      \?)  echoText -c $COLOR_RED "ERROR: Invalid option passed to askUser: -${OPTARG}"
@@ -27,10 +37,16 @@ askUser() {
   done
 
   shift $((OPTIND-1))
+  choices=$@
+
+  if [ -z $"{prompt}" ]; then
+    echoText -c $COLOR_RED "ERROR: No prompt provided to askUser"
+    exit 1
+  fi
 
   case $command in
-    "confirm")  echo "Confirm Prompt: '$@'" >> $LOG_FILE
-                if gum confirm "$@"; then
+    "confirm")  echo "Confirm Prompt: '${prompt}'" >> $LOG_FILE
+                if gum confirm "${prompt}"; then
                   echo "User Chose: Yes" >> $LOG_FILE
                   echo true
                 else
@@ -39,12 +55,54 @@ askUser() {
                 fi
                 ;;
 
-    "choose")   echo "Choose Prompt: '$@'" >> $LOG_FILE
-                local result=$(gum choose "$@")
-                echo "User Chose: ${result}" >> $LOG_FILE
+    "choose")   echo "Choose Prompt: '${prompt}', Choices: '$choices'" >> $LOG_FILE
+                local result=$(gum choose --header "${prompt}" $choices)
+                echo "User Chose: '${result}'" >> $LOG_FILE
                 echo $result
                 ;;
   esac
+}
+
+cloneRepo() {
+  repoUrl=$1
+  repoFolder=$2
+  validationFile=$3
+
+  if [ -z $repoUrl ]; then
+    echoText -c $COLOR_RED "ERROR: No repo URL provided to cloneRepo"
+    exit 1
+  fi
+
+  if [ -z $repoFolder ]; then
+    echoText -c $COLOR_RED "ERROR: No repo folder provided to cloneRepo"
+    exit 1
+  fi
+
+  ensureFolder $repoFolder
+
+  echoText "Cloning the git repository at '${repoUrl}'"
+
+  doit() {
+    sudo -u $SUDO_USER git clone --depth 1 $repoUrl $repoFolder >> $LOG_FILE 2>&1
+  }
+
+  if ! doit; then
+    echoText -c $COLOR_RED "ERROR: An error occured cloning the git repository at '${repoUrl}'"
+    exit 1
+  fi
+
+  if [ -d $repoFolder ]; then
+    echoText "'${repoUrl}' repo cloned successfully"
+    cd $repoFolder
+  else
+    echoText -c $COLOR_RED "ERROR: '${repoUrl}' was not successfully cloned"
+    exit 1
+  fi
+
+  if [ -n $validateFile ] && [ ! -f $validationFile ]; then
+    echoText -c $COLOR_RED "ERROR: '${validationFile}' does not exist"
+    exit 1
+  fi
 }
 
 echoText() {
@@ -124,11 +182,28 @@ ensureFolder() {
    
   if [ ! -d $folderPath ] ;then
     if $useSudoUser; then
-      sudo -u $SUDO_USER mkdir $folderPath
+      sudo -u $SUDO_USER mkdir -p $folderPath
     else
-      mkdir $folderPath
+      mkdir -p $folderPath
     fi
 
     echoText "Folder '${folderPath}' created"
+  fi
+}
+
+
+existsOrExit() {
+  if [ -z $1 ]; then
+    echoText -c $COLOR_RED "ERROR: $2"
+    exit 1
+  fi
+}
+
+removeExistingFolder() {
+  existsOrExit $1 "No folder path provided to removeFolderIfExists"
+
+  if [ -d $1 ]; then
+    rm -rf $1
+    echoText "Existing folder '$1' removed"
   fi
 }

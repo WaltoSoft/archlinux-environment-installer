@@ -6,22 +6,15 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 REPO_NAME=archlinux-environment-installer
-REPO_DIR=/home/$SUDO_USER/Git/$REPO_NAME
+GIT_DIR=/home/$SUDO_USER/Git
+REPO_DIR=$GIT_DIR/$REPO_NAME
 INSTALL_DIR=$REPO_DIR/install
 SCRIPTS_DIR=$INSTALL_DIR/scripts
 LOGS_DIR=/var/log/$REPO_NAME
 LOG_FILE="${LOGS_DIR}/$(date '+%Y%m%d%H%M%S').log"
 
-HYPRLAND_PACMAN_PACKAGES=(
-  "hyprland"
-  "sddm"
-)
-
-HYPRLAND_YAY_PACKAGES=(
-  "uwsm"
-  "sddm-theme-sugar-candy-git"
-)
-
+#These are packages I want install, some of them are used
+#in the hyprland dor files that get intalled.
 MY_PACMAN_PACKAGES=(
   "fastfetch"
   "vim"
@@ -35,7 +28,17 @@ MY_PACMAN_PACKAGES=(
   "man-db"
 )
 
-MY_YAY_PACKAGES=(
+#These packages are required for hyprland
+HYPRLAND_AURS=(
+  "hyprland"
+  "sddm"
+  "uwsm"
+  "sddm-theme-sugar-candy-git"
+)
+
+#These are Aur packages I want to install, some of them are used
+#in the hyprland dor files that get intalled.
+MY_AURS=(
   "visual-studio-code-bin"    
 )
 
