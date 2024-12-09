@@ -30,8 +30,8 @@ MY_PACMAN_PACKAGES=(
 
 #These packages are required for hyprland
 HYPRLAND_AURS=(
-  "hyprland"
-  "sddm"
+  "hyprland-git"
+  "sddm-git"
   "uwsm"
   "sddm-theme-sugar-candy-git"
 )
